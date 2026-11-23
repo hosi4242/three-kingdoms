@@ -1,0 +1,10 @@
+import { addExperience, awakenGeneral, expRequired, normalizeGeneralProgress, MAX_GENERAL_LEVEL, MAX_AWAKENING, AWAKEN_STONE_COST } from "../browser-test/js/progression.js";
+let fail=0;const check=(v,m)=>{if(v)console.log("OK",m);else{console.log("FAIL",m);fail++}};
+let g={id:"x",owned:true,level:1,exp:0,awakening:0};let r=addExperience(g,100);check(r.general.level===2&&r.general.exp===0&&r.levels===1,"경험치 100으로 Lv.2 상승");
+r=addExperience({...r.general,level:29,exp:0},100000);check(r.general.level===30&&r.general.exp===0,"최대 레벨 30 상한");
+let state={inventory:{awakeningStone:3},generals:[{id:"x",owned:true,level:1,exp:0,awakening:0}]};let a=awakenGeneral(state,"x");check(a.ok&&a.general.awakening===1&&a.state.inventory.awakeningStone===0,"각성석 3개로 1단계 각성");
+check(!awakenGeneral(state,"missing").ok,"존재하지 않는 장수 각성 거부");
+state={inventory:{awakeningStone:2},generals:[{id:"x",owned:true,level:1,exp:0,awakening:0}]};check(!awakenGeneral(state,"x").ok,"각성석 부족 시 각성 거부");
+state={inventory:{awakeningStone:30},generals:[{id:"x",owned:true,level:30,exp:0,awakening:5}]};check(!awakenGeneral(state,"x").ok,"최대 각성 단계 제한");
+let x={level:999,exp:99999,awakening:99};normalizeGeneralProgress(x);check(x.level===MAX_GENERAL_LEVEL&&x.exp===0&&x.awakening===MAX_AWAKENING,"비정상 진행 데이터 상한 보정");
+console.log(fail?`${fail} failures`:"progression tests passed");process.exit(fail?1:0);

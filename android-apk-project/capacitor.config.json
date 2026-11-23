@@ -1,0 +1,9 @@
+{
+  "appId": "com.cheonhap.game",
+  "appName": "천하패권",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

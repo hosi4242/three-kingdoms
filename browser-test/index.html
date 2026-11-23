@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="삼국지: 천하패권 - 오프라인 모바일 장수 수집 카드 배틀 게임">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <title>삼국지: 천하패권</title>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">OFFLINE STRATEGY CARD GAME</div>
+      <h1>삼국지: 천하패권</h1>
+    </div>
+    <div class="version">개발판 v<span data-app-version>0.5.0</span></div>
+  </header>
+
+  <main>
+    <section class="welcome panel">
+      <div>
+        <p class="eyebrow">천하를 향한 첫걸음</p>
+        <h2>장수를 모으고, 전략을 준비하라.</h2>
+        <p class="muted">장수를 선택해 AI와 겨루는 카드 전투를 즐길 수 있는 개발판입니다.</p>
+      </div>
+      <div class="welcome-mark" aria-hidden="true">漢</div>
+    </section>
+
+    <section class="summary-grid">
+      <div class="summary panel"><span>등록 장수</span><strong id="roster-count">60</strong></div>
+      <div class="summary panel"><span>보유 장수</span><strong id="owned-count">5</strong></div>
+      <div class="summary panel"><span>군주 레벨</span><strong id="lord-level">1</strong></div>
+    </section>
+
+    <nav class="tabs" aria-label="주요 메뉴">
+      <button class="tab active" data-tab="generals">장수 도감</button><button class="tab" data-tab="battle">전투</button><button class="tab" data-tab="recruit">모집</button><button class="tab" data-tab="training">육성</button>
+      <button class="tab" data-tab="collection">보유 장수</button>
+      <button class="tab" data-tab="settings">저장 관리</button>
+    </nav>
+
+    <section id="generals-view" class="view">
+      <div class="section-heading">
+        <div><p class="eyebrow">GENERAL ARCHIVE</p><h2>장수 도감</h2></div>
+        <span class="muted small">능력치는 게임 밸런스용 초기값</span>
+      </div>
+      <div class="filters">
+        <input id="search" type="search" placeholder="장수 이름 검색" aria-label="장수 이름 검색">
+        <select id="faction-filter" aria-label="세력 필터">
+          <option value="전체">전체 세력</option><option>위</option><option>촉</option><option>오</option><option>군웅</option>
+        </select>
+        <select id="rank-filter" aria-label="등급 필터">
+          <option value="전체">전체 등급</option><option>일반</option><option>고급</option><option>희귀</option><option>영웅</option><option>전설</option>
+        </select>
+      </div>
+      <div id="general-grid" class="general-grid"></div>
+    </section>
+
+    <section id="battle-view" class="view hidden">
+<div class="section-heading"><div><p class="eyebrow">DUEL OF STRATEGY</p><h2>전략 카드 전투</h2></div><span class="muted small">3판 2선승제</span></div>
+<div class="panel battle-panel">
+<div class="battle-rules"><div><strong>공격형</strong><span>전술형에게 강함</span></div><div><strong>전술형</strong><span>진형형에게 강함</span></div><div><strong>진형형</strong><span>공격형에게 강함</span></div></div>
+<p class="muted">보유 장수 중 3명을 출전시킵니다. 한 번 출전한 장수는 같은 전투에서 다시 사용할 수 없습니다.</p>
+<div id="battle-setup"><h3>출전 장수 3명 선택</h3><p class="muted">보유 장수 <span id="battle-owned-count">5</span>명 중 원하는 3명을 선택하세요.</p><div id="battle-roster" class="battle-roster"></div><button id="start-battle" class="primary-btn" disabled>전투 시작</button></div>
+<div id="battle-arena" class="hidden"><div class="scoreboard"><div><span>나의 승리</span><strong id="player-score">0</strong></div><div class="versus">VS</div><div><span>상대 승리</span><strong id="enemy-score">0</strong></div></div>
+<p id="round-label" class="round-label">1라운드</p>
+<div class="ultimate-control"><label><input type="checkbox" id="ultimate-toggle"> 이번 라운드 필살기 발동</label><span id="ultimate-hint">필살기는 전투당 장수별 1회 사용할 수 있습니다.</span></div><div class="duel-cards"><div class="duel-card"><span class="eyebrow">MY CARD</span><div id="player-card">장수를 선택하세요.</div></div><div class="duel-card enemy"><span class="eyebrow">AI CARD</span><div id="enemy-card">AI 대기 중</div></div></div>
+<div id="round-result" class="round-result">이번 라운드에 출전할 장수를 선택하세요.</div><div id="battle-choices" class="battle-choices"></div><button id="next-battle" class="secondary-btn hidden">새 전투 준비</button></div></div>
+<div class="panel settings-card battle-record"><h3>전투 기록</h3><div class="record-grid"><div><span>승리</span><strong id="battle-wins">0</strong></div><div><span>패배</span><strong id="battle-losses">0</strong></div><div><span>총 전투</span><strong id="battle-total">0</strong></div></div></div></section>
+<section id="recruit-view" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">RECRUITMENT</p><h2>장수 모집</h2></div><span class="muted small">금화로 이용 · 현금 결제 없음</span></div>
+      <div class="panel settings-card recruit-wallet">
+        <div class="gold-line"><span>보유 금화</span><strong id="recruit-gold">0</strong></div>
+        <h3>혼 조각</h3><div id="shard-list" class="shard-list"></div>
+        <p class="muted small">이미 보유한 장수가 나오면 등급별 혼 조각으로 바뀝니다.</p>
+      </div>
+      <div id="banner-list"></div>
+      <div class="panel settings-card"><h3>최근 모집 결과</h3><div id="recruit-results" class="result-grid" aria-live="polite"></div></div>
+      <div class="panel settings-card"><h3>전설 장수 영입</h3>
+        <p class="muted">전설 혼 조각 <strong id="redeem-progress">0 / 100</strong></p>
+        <div class="bar"><div id="redeem-bar" class="bar-fill"></div></div>
+        <select id="redeem-select" aria-label="영입할 전설 장수"></select>
+        <button id="redeem-btn" class="primary-btn" disabled>선택한 전설 장수 영입</button>
+        <p id="redeem-note" class="muted small"></p>
+      </div>
+    </section>
+
+    <section id="training-view" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">GENERAL TRAINING</p><h2>장수 육성</h2></div><span class="muted small">최대 Lv.30 · 각성 5단계</span></div>
+      <div class="panel settings-card training-wallet"><div>보유 경험서 <strong id="training-manuals">0</strong></div><div>보유 각성석 <strong id="training-stones">0</strong></div><p class="muted small">전투 승리 시 경험서 1개, 3회 승리마다 각성석 1개를 획득합니다. 전투에 참가한 보유 장수는 경험치를 얻습니다.</p></div>
+      <div id="training-list" class="training-list"></div>
+    </section>
+
+    <section id="collection-view" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">MY GENERALS</p><h2>보유 장수</h2></div></div>
+      <div id="owned-grid" class="general-grid"></div>
+    </section>
+
+    <section id="settings-view" class="view hidden">
+      <div class="section-heading"><div><p class="eyebrow">DATA & UPDATE</p><h2>저장 관리</h2></div></div>
+      <div class="panel settings-card">
+        <h3>게임 데이터 백업</h3>
+        <p class="muted">현재 보유 장수와 진행 데이터를 JSON 파일로 저장합니다.</p>
+        <button id="export-btn" class="primary-btn">백업 파일 내보내기</button>
+        <div class="divider"></div>
+        <h3>백업 파일 복원</h3>
+        <p class="muted">이전에 내보낸 게임 백업 파일을 선택합니다. 복원하면 현재 저장 데이터가 교체됩니다.</p>
+        <input id="import-file" type="file" accept="application/json,.json">
+        <button id="import-btn" class="secondary-btn">선택한 백업 복원</button>
+        <div class="divider"></div>
+        <h3>텍스트로 백업·복원</h3>
+        <p class="muted">파일 저장이 되지 않는 기기에서는 백업 내용을 복사해 메모 앱 등에 보관하고, 필요할 때 아래 칸에 붙여넣어 복원하세요.</p>
+        <button id="copy-backup-btn" class="secondary-btn">백업 내용 복사</button>
+        <textarea id="paste-backup" rows="4" placeholder="백업 내용을 여기에 붙여넣기" aria-label="백업 내용 붙여넣기"></textarea>
+        <button id="paste-import-btn" class="secondary-btn">붙여넣은 내용으로 복원</button>
+        <p id="backup-status" class="status" role="status"></p>
+      </div>
+      <div class="panel settings-card">
+        <h3>버전 및 업데이트 구조</h3>
+        <p>앱 버전: <strong data-app-version>0.5.0</strong></p>
+        <p>저장 데이터 형식: <strong id="save-version">3</strong></p>
+        <p class="muted">앱 파일과 저장 데이터 버전을 분리했습니다. 향후 업데이트에서는 저장 데이터 마이그레이션 절차를 통해 기존 진행 상황을 유지하도록 확장합니다.</p>
+        <p class="muted small">현재 개발판은 로컬 기기 저장을 사용합니다. 브라우저 데이터 삭제 또는 앱 제거 전에 백업 파일을 보관하세요.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="하단 메뉴">
+    <button class="bottom-item active" data-tab="generals"><span>⚔</span>도감</button>
+    <button class="bottom-item" data-tab="battle"><span>🛡</span>전투</button><button class="bottom-item" data-tab="recruit"><span>✦</span>모집</button><button class="bottom-item" data-tab="training"><span>📈</span>육성</button><button class="bottom-item" data-tab="collection"><span>♟</span>보유</button>
+    <button class="bottom-item" data-tab="settings"><span>⚙</span>설정</button>
+  </nav>
+
+  <dialog id="general-dialog">
+    <div class="dialog-head"><span class="eyebrow">GENERAL PROFILE</span><button id="close-dialog" class="close-btn" aria-label="닫기">✕</button></div>
+    <div id="general-detail"></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
