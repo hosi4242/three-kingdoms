@@ -143,3 +143,27 @@ textarea{width:100%;box-sizing:border-box;margin-top:10px;background:#0e1929;col
 .arena-action-panel small{color:var(--muted)}
 .arena-log{max-height:190px;overflow:auto;padding-left:22px;font-size:.78rem;line-height:1.65}
 @media(min-width:700px){.arena-battlefield{max-width:850px;margin:16px auto}.arena-team{grid-template-columns:repeat(4,minmax(0,1fr))}.arena-unit{padding:12px}.arena-unit h4{font-size:1.08rem}}
+
+/* v2.1.0 전술 선택·회복·상태 이상 시각 효과 */
+.arena-action-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.arena-action-options button{flex:1 1 120px;min-height:42px}
+.arena-heal-target-btn{width:100%;margin-top:7px;padding:8px 4px;border:1px solid #70d7a0;border-radius:8px;background:#155c43;color:#effff5;font-weight:900;font-size:.74rem}
+.arena-unit{isolation:isolate}
+.arena-status-art{display:none;position:absolute;z-index:0;inset:0;align-items:center;justify-content:center;font-size:clamp(54px,13vw,90px);font-weight:900;letter-spacing:-.18em;opacity:.23;pointer-events:none;text-shadow:0 0 18px currentColor,0 0 34px currentColor;mix-blend-mode:screen}
+.arena-unit.stun{border:2px solid #ffe45b;background:radial-gradient(circle at 50% 42%,#94751e 0%,#3e341d 40%,#171d29 82%)}
+.arena-unit.stun .arena-status-art{display:flex;color:#fff06a;content:"⚡"}
+.arena-unit.dot{border:2px solid #bd6cff;background:radial-gradient(circle at 50% 42%,#5b2672 0%,#301b43 46%,#171525 85%)}
+.arena-unit.dot .arena-status-art{display:flex;color:#d78cff}
+.arena-unit.slow{border:2px solid #6bc8ff;background:radial-gradient(circle at 50% 42%,#1b527a 0%,#1a304b 48%,#121c2b 86%)}
+.arena-unit.slow .arena-status-art{display:flex;color:#74d4ff}
+.arena-unit.weaken{border:2px solid #ff8b65;background:radial-gradient(circle at 50% 42%,#713b2c 0%,#39242a 48%,#171d29 86%)}
+.arena-unit.weaken .arena-status-art{display:flex;color:#ff9c72}
+.arena-unit.atkUp{border:2px solid #ffb84c;background:radial-gradient(circle at 50% 42%,#78451b 0%,#42301e 48%,#171d29 86%)}
+.arena-unit.atkUp .arena-status-art{display:flex;color:#ffc15c}
+.arena-unit.shield{border:2px solid #69e2d2;background:radial-gradient(circle at 50% 42%,#17635d 0%,#1c3d46 48%,#111e2d 86%)}
+.arena-unit.shield .arena-status-art{display:flex;color:#74f2e3}
+.arena-unit .arena-card-top,.arena-unit h4,.arena-unit .arena-card-role,.arena-unit .arena-hp,.arena-unit .arena-hp-label,.arena-unit .arena-stats,.arena-unit .arena-card-skill,.arena-unit .arena-card-status,.arena-unit button{position:relative;z-index:1}
+.arena-unit.fallen .arena-status-art{display:none}
+.arena-card-status{font-weight:900;text-shadow:0 1px 3px #000}
+.arena-target-btn{position:relative;z-index:2}
+@media(max-width:520px){.arena-action-options{position:sticky;bottom:8px;z-index:5;padding:7px;background:#101b2c;border:1px solid var(--line);border-radius:10px}.arena-action-options button{font-size:.78rem}}
