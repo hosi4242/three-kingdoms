@@ -1,5 +1,5 @@
 // 앱/저장 형식 버전은 이 파일 한 곳에서 관리합니다.
-export const APP_VERSION = "2.3.0";
+export const APP_VERSION = "2.3.1";
 export const SAVE_FORMAT_VERSION = 7;
 export const BACKUP_VERSION = 7;
 // v1.0.0: 상점 구매 이력 필드 추가.
@@ -9,4 +9,6 @@ export const BACKUP_VERSION = 7;
 
 // v2.2.0: 필살기 상태 효과 확률·퍼센트 밸런스·카드 하단 행동 버튼.
 
-// v2.3.0: 전체 회복 대상·상태이상 60~80%·광역 필살기·카드 뒷면·기권패·능력치 재산정.
+// v2.3.1: 전체 회복 대상·상태이상 60~80%·광역 필살기·카드 뒷면·기권패·능력치 재산정.
+
+// v2.3.1: 카드 필살기 설명에 상태 효과 적용 확률을 명시.

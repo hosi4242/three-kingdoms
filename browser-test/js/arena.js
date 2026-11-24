@@ -32,7 +32,7 @@ function skillProfile(g){
  const percent=f.type==="atkUp"?16+r:f.type==="shield"?28+r*1.2:f.type==="defDown"?(f.kind==="allAttack"?13:18)+r:f.type==="slow"?(f.kind==="allAttack"?18:22)+r:0;
  const healPercent=f.type==="heal"?28+r*1.2:0;
  const desc=f.type==="atkUp"?"공격력 "+Math.round(percent)+"% 증가 · 2턴":f.type==="shield"?"최대 체력의 "+Math.round(percent)+"% 보호막 · 2턴":f.type==="defDown"?(f.kind==="allAttack"?"적 전체 방어력 ":"방어력 ")+Math.round(percent)+"% 감소 · 2턴":f.type==="slow"?(f.kind==="allAttack"?"적 전체 속도 ":"속도 ")+Math.round(percent)+"% 감소 · 2턴":f.type==="heal"?"아군 또는 자신 체력 "+Math.round(healPercent)+"% 회복":f.type==="dot"?"공격력의 18% 지속 피해 · 3턴":f.desc;
- return {...f,power:Math.round(percent),healPercent:Math.round(healPercent),chance,name:g.skillName||"고유 필살기",description:desc,cooldown:3};
+ return {...f,power:Math.round(percent),healPercent:Math.round(healPercent),chance,name:g.skillName||"고유 필살기",description:(f.kind==="attack"||f.kind==="allAttack")?desc+" · 적용 확률 "+chance+"%":desc,cooldown:3};
 }
 export function createArenaTeam(generals,ids,inventory=[],enemy=false){
  return ids.map(id=>{const g=generals.find(x=>x.id===id);if(!g)return null;const stats=arenaStats(g,inventory);if(enemy){stats.hp=Math.round(stats.hp*1.04);stats.maxHp=stats.hp;stats.atk=Math.round(stats.atk*1.02)}return {id:g.id,name:g.name,style:g.style,faction:g.faction,rank:g.rank,level:g.level||1,hp:stats.hp,stats,effects:[],skill:stats.skill,skillCooldown:0,team:enemy?"enemy":"player"}}).filter(Boolean)
