@@ -3,33 +3,35 @@ const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 export function arenaStats(g,equipmentInventory=[]){
  const s=g.stats||{},level=Math.max(1,Number(g.level)||1),awaken=Math.max(0,Number(g.awakening)||0);
  const rank={일반:1,고급:1.06,희귀:1.12,영웅:1.19,전설:1.27}[g.rank]||1;
- const martial=Number(s.martial)||50,intel=Number(s.intelligence)||50,lead=Number(s.leadership)||50;
+ const martial=Number(s.martial)||50,intel=Number(s.intelligence)||50,lead=Number(s.leadership)||50,politics=Number(s.politics)||50,charm=Number(s.charm)||50;
  const eq=(equipmentInventory||[]).filter(x=>Object.values(g.equipment||{}).includes(x.uid)).reduce((a,x)=>a+(Number(x.value)||0)+(Number(x.enhance)||0)*2,0);
  // 체력은 낮추고 공격·방어의 실전 영향력을 높여 교전 템포를 빠르게 조정
- const hp=Math.round((610+lead*7+martial*1.2+level*20+awaken*35)*rank);
- const atk=Math.round((88+martial*1.35+intel*.22+level*4.1+eq*.48)*rank);
- const def=Math.round((22+lead*.24+martial*.12+level*.8+eq*.12)*rank);
- const spd=Math.round(75+intel*.22+lead*.08+(g.style==="공격형"?5:g.style==="전술형"?3:0));
+ const hp=Math.round((430+lead*5.2+martial*1.25+charm*1.15+level*18+awaken*35)*rank);
+ const atk=Math.round((70+martial*1.48+intel*.18+level*3.8+eq*.48)*rank);
+ const def=Math.round((18+lead*.28+politics*.22+charm*.08+level*.72+eq*.12)*rank);
+ const spd=Math.round(68+intel*.18+lead*.12+politics*.035+(g.style==="공격형"?5:g.style==="전술형"?3:0));
  const passive=g.combatEffects?.passive||{},bonus=Math.round((Number(s[passive.stat])||0)*(Number(passive.rate)||0));
  const skill=skillProfile(g);
  return {hp,maxHp:hp,atk:atk+(passive.stat==="martial"?bonus:0),def:def+(passive.stat==="leadership"?Math.round(bonus*.15):0),spd:spd+(passive.stat==="intelligence"?Math.round(bonus*.15):0),crit:clamp(8+martial*.16,8,28),rank:g.rank,skill};
 }
 const FORMS=[
- {type:"stun",turns:1,kind:"attack",chance:22,desc:"기절 1턴"},
- {type:"slow",turns:2,kind:"attack",chance:72,desc:"속도 감소 · 2턴"},
+ {type:"stun",turns:1,kind:"attack",chance:60,desc:"기절 1턴"},
+ {type:"slow",turns:2,kind:"attack",chance:64,desc:"속도 감소 · 2턴"},
  {type:"dot",turns:3,kind:"attack",chance:68,desc:"지속 피해 · 3턴"},
  {type:"atkUp",turns:2,kind:"self",desc:"자신의 공격력 증가 · 2턴"},
  {type:"shield",turns:2,kind:"self",desc:"자신에게 보호막 · 2턴"},
- {type:"defDown",turns:2,kind:"attack",chance:62,desc:"방어력 감소 · 2턴"},
- {type:"heal",turns:0,kind:"ally",desc:"아군 1명 체력 회복"}
+ {type:"defDown",turns:2,kind:"attack",chance:72,desc:"방어력 감소 · 2턴"},
+ {type:"heal",turns:0,kind:"ally",desc:"아군 또는 자신 회복"},
+ {type:"slow",turns:2,kind:"allAttack",chance:76,desc:"적 전체 속도 감소 · 2턴"},
+ {type:"defDown",turns:2,kind:"allAttack",chance:78,desc:"적 전체 방어력 감소 · 2턴"}
 ];
 const RANK_POWER={일반:0,고급:2,희귀:4,영웅:6,전설:9};
 function skillProfile(g){
  const n=parseInt(String(g.id).replace(/\D/g,""),10)||1,f=FORMS[(n-1)%FORMS.length],r=RANK_POWER[g.rank]||0;
- const chance=f.chance==null?100:Math.min(85,f.chance+Math.round(r*.65));
- const percent=f.type==="atkUp"?14+r:f.type==="shield"?28+r*1.2:f.type==="defDown"?16+r:f.type==="slow"?28+r*.5:0;
+ const chance=f.chance==null?100:Math.min(80,f.chance+Math.round(r*.55));
+ const percent=f.type==="atkUp"?16+r:f.type==="shield"?28+r*1.2:f.type==="defDown"?(f.kind==="allAttack"?13:18)+r:f.type==="slow"?(f.kind==="allAttack"?18:22)+r:0;
  const healPercent=f.type==="heal"?28+r*1.2:0;
- const desc=f.type==="atkUp"?"공격력 "+Math.round(percent)+"% 증가 · 2턴":f.type==="shield"?"최대 체력의 "+Math.round(percent)+"% 보호막 · 2턴":f.type==="defDown"?"방어력 "+Math.round(percent)+"% 감소 · 2턴":f.type==="slow"?"속도 "+Math.round(percent)+"% 감소 · 2턴":f.type==="heal"?"아군 체력 "+Math.round(healPercent)+"% 회복":f.type==="dot"?"공격력의 18% 지속 피해 · 3턴":f.desc;
+ const desc=f.type==="atkUp"?"공격력 "+Math.round(percent)+"% 증가 · 2턴":f.type==="shield"?"최대 체력의 "+Math.round(percent)+"% 보호막 · 2턴":f.type==="defDown"?(f.kind==="allAttack"?"적 전체 방어력 ":"방어력 ")+Math.round(percent)+"% 감소 · 2턴":f.type==="slow"?(f.kind==="allAttack"?"적 전체 속도 ":"속도 ")+Math.round(percent)+"% 감소 · 2턴":f.type==="heal"?"아군 또는 자신 체력 "+Math.round(healPercent)+"% 회복":f.type==="dot"?"공격력의 18% 지속 피해 · 3턴":f.desc;
  return {...f,power:Math.round(percent),healPercent:Math.round(healPercent),chance,name:g.skillName||"고유 필살기",description:desc,cooldown:3};
 }
 export function createArenaTeam(generals,ids,inventory=[],enemy=false){
@@ -66,6 +68,7 @@ export function applyArenaAttack(actor,target,log,useSkill=false){
  }
  age(actor);return {ok:true,damage};
 }
+export function applyArenaAreaSkill(actor,targets,log){if(!actor||actor.hp<=0||actor.skillCooldown>0||!targets?.length)return {ok:false,reason:"필살기를 사용할 수 없습니다."};for(const e of actor.effects)if(e.type==="dot"&&e.turns>0){actor.hp=Math.max(0,actor.hp-e.power);log.push("☠ "+actor.name+" 지속 피해 "+e.power)}if(actor.hp<=0)return {ok:false,reason:"지속 피해로 행동할 수 없습니다."};if(active(actor,"stun")){log.push("⚡ "+actor.name+" 기절 · 필살기 불가");age(actor);return {ok:false,reason:"기절 상태에서는 행동할 수 없습니다."}}const skill=actor.skill;actor.skillCooldown=skill.cooldown;targets.filter(t=>t&&t.hp>0&&t.team!==actor.team).forEach(target=>{let dealt=Math.max(12,Math.round(actor.stats.atk*.82*(.92+Math.random()*.16)-target.stats.def*.48));const shield=active(target,"shield");if(shield){const absorbed=Math.min(shield.power,dealt);shield.power-=absorbed;dealt-=absorbed;if(!shield.power)shield.turns=0}target.hp=Math.max(0,target.hp-dealt);if(Math.random()*100<skill.chance){const power=skill.type==="dot"?Math.round(actor.stats.atk*.18):skill.power;pushEffect(target,{type:skill.type,turns:skill.turns,power});log.push("☄ "+target.name+" · "+skill.description+" 적용 성공 ("+skill.chance+"%)")}else log.push("☄ "+target.name+" 상태 효과 저항 ("+skill.chance+"%)");log.push("★ "+actor.name+" 광역 필살기 → "+target.name+" "+dealt+" 피해")});age(actor);return {ok:true}}
 export function applyArenaHeal(actor,target,log){
  if(!actor||!target||actor.hp<=0||target.hp<=0||actor.team!==target.team)return {ok:false};
  if(actor.skillCooldown>0)return {ok:false,reason:"필살기는 아직 재사용 대기 중입니다."};
@@ -82,8 +85,8 @@ function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&
 function factionClass(f){return ({위:"wei",촉:"shu",오:"wu",군웅:"other"})[f]||"other"}
 export function renderArenaTeam(generals,team,options={}){
  return team.map(u=>{const g=generals.find(x=>x.id===u.id);if(!g)return "";const pct=Math.max(0,u.hp/u.stats.maxHp*100),effects=u.effects.filter(e=>e.turns>0),status=effects.map(e=>({stun:"기절",slow:"속도↓",atkUp:"공격↑",shield:"보호막",dot:"지속 피해",defDown:"방어↓"}[e.type])).join(" · ")||"정상";
- const effectClass=effects.map(e=>e.type).join(" "),selectable=options.selectable&&u.hp>0,healable=options.healable&&u.hp>0&&u.hp<u.stats.maxHp&&u.id!==options.excludeId,turnActions=options.turnActions&&u.id===options.activeId;
+ const effectClass=effects.map(e=>e.type).join(" "),selectable=options.selectable&&u.hp>0,healable=options.healable&&u.hp>0,turnActions=options.turnActions&&u.id===options.activeId;
  const overlay=effects.map(e=>({stun:"⚡",slow:"〰",dot:"☠",atkUp:"🔥",shield:"🛡",defDown:"🛡"}[e.type])).filter(Boolean).join(" ");
- return '<article class="arena-unit faction-'+factionClass(g.faction)+' '+(u.hp<=0?"fallen":"")+' '+(options.activeId===u.id?"acting":"")+' '+effectClass+'"><div class="arena-status-art" aria-hidden="true">'+overlay+'</div><div class="arena-card-top"><span>'+safe(g.faction)+'</span><span>'+safe(g.rank)+'</span></div><h4>'+safe(g.name)+'</h4><div class="arena-card-role">'+safe(g.style)+' · 속도 '+u.stats.spd+'</div><div class="arena-hp"><i style="width:'+pct+'%"></i></div><div class="arena-hp-label">체력 '+Math.max(0,u.hp).toLocaleString()+' / '+u.stats.maxHp.toLocaleString()+'</div><div class="arena-stats"><span>공 '+u.stats.atk+'</span><span>방 '+u.stats.def+'</span><span>속 '+u.stats.spd+'</span></div><div class="arena-card-skill"><b>'+safe(u.skill.name)+'</b><small>'+safe(u.skill.description)+'</small></div>' +(turnActions?'<div class="arena-card-actions"><button type="button" class="arena-card-action normal" data-arena-card-action="attack">일반 공격</button><button type="button" class="arena-card-action ultimate" data-arena-card-action="skill" '+(u.skillCooldown>0?'disabled':'')+'><span>필살기</span><small>'+(u.skillCooldown>0?'대기 '+u.skillCooldown+'턴':(u.skill.chance===100?'사용 가능':'효과 '+u.skill.chance+'%'))+'</small></button></div>':'')+'<div class="arena-card-status">'+safe(status)+'</div>'+(selectable?'<button type="button" class="arena-target-btn" data-arena-target="'+safe(u.id)+'">공격 대상</button>':"")+(healable?'<button type="button" class="arena-heal-target-btn" data-arena-heal-target="'+safe(u.id)+'">이 장수 회복</button>':"")+'</article>';
+ return '<article class="arena-unit faction-'+factionClass(g.faction)+' '+(u.hp<=0?"fallen":"")+' '+(options.activeId===u.id?"acting":"")+' '+effectClass+'"><div class="arena-card-front"><div class="arena-status-art" aria-hidden="true">'+overlay+'</div><div class="arena-card-top"><span>'+safe(g.faction)+'</span><span>'+safe(g.rank)+'</span></div><h4>'+safe(g.name)+'</h4><div class="arena-card-role">'+safe(g.style)+' · 속도 '+u.stats.spd+'</div><div class="arena-hp"><i style="width:'+pct+'%"></i></div><div class="arena-hp-label">체력 '+Math.max(0,u.hp).toLocaleString()+' / '+u.stats.maxHp.toLocaleString()+'</div><div class="arena-stats"><span>공 '+u.stats.atk+'</span><span>방 '+u.stats.def+'</span><span>속 '+u.stats.spd+'</span></div><div class="arena-card-skill"><b>'+safe(u.skill.name)+'</b><small>'+safe(u.skill.description)+'</small></div></div><div class="arena-card-back"><div class="arena-back-section"><b>능력치</b><p>무력 '+safe(g.stats.martial)+' · 지력 '+safe(g.stats.intelligence)+' · 통솔 '+safe(g.stats.leadership)+' · 정치 '+safe(g.stats.politics)+' · 매력 '+safe(g.stats.charm)+'</p></div><div class="arena-back-section"><b>고유 특성 / 약점</b><p>'+safe(g.passiveDesc||g.passive||"정보 없음")+' / '+safe(g.weaknessDesc||g.weakness||"정보 없음")+'</p></div></div><button type="button" class="arena-flip" data-arena-flip>뒷면 보기</button>' +(turnActions?'<div class="arena-card-actions"><button type="button" class="arena-card-action normal" data-arena-card-action="attack">일반 공격</button><button type="button" class="arena-card-action ultimate" data-arena-card-action="skill" '+(u.skillCooldown>0?'disabled':'')+'><span>필살기</span><small>'+(u.skillCooldown>0?'대기 '+u.skillCooldown+'턴':(u.skill.chance===100?'사용 가능':'효과 '+u.skill.chance+'%'))+'</small></button></div>':'')+'<div class="arena-card-status">'+safe(status)+'</div>'+(selectable?'<button type="button" class="arena-target-btn" data-arena-target="'+safe(u.id)+'">공격 대상</button>':"")+(healable?'<button type="button" class="arena-heal-target-btn" data-arena-heal-target="'+safe(u.id)+'">이 장수 회복</button>':"")+'</article>';
  }).join("");
 }
