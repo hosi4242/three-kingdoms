@@ -65,7 +65,7 @@ function battlePower(g,isEnemy=false){return power(g)*(isEnemy?(battle?.enemySca
 function passiveBonus(g){return passiveCombatBonus(g)}
 function weaknessPenalty(g,opp){return weaknessCombatPenalty(g,opp)}
 function skillBonus(g,opp,advantage){return ultimateCombatBonus(g,advantage)}
-function renderChoices(){const a=battle.available.map(id=>gameState.generals.find(g=>g.id===id));$("#battle-choices").innerHTML=a.map(g=>`<button class="choice-btn" data-fight="${esc(g.id)}">${portraitHTML(g,"portrait-choice")}<strong>${esc(g.name)}</strong><span>${esc(g.style)}</span></button>`).join("")||'<p class="muted">출전 가능한 장수가 없습니다.</p>'}
+function renderChoices(){const a=battle.available.map(id=>gameState.generals.find(g=>g.id===id));$("#battle-choices").innerHTML=a.map(g=>`<article class="choice-card"><button class="choice-btn" data-fight="${esc(g.id)}">${portraitHTML(g,"portrait-choice")}<strong>${esc(g.name)}</strong><span>${esc(g.style)}</span></button>${generalBackHTML(g)}</article>`).join("")||'<p class="muted">출전 가능한 장수가 없습니다.</p>'}
 async function playRound(id){
 if(!battle?.active||!battle.available.includes(id))return;
 const p=gameState.generals.find(g=>g.id===id);
