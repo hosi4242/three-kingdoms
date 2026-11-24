@@ -10,7 +10,7 @@ import { CAMPAIGN_CHAPTERS, CAMPAIGN_STAGE_COUNT, defaultCampaignState, normaliz
 import { MISSION_DEFS, defaultMissionState, normalizeMissionState, missionMetrics, applyMissionProgress, missionRewardText } from "./missions.js";
 import { SHOP_ITEMS, defaultShopState, normalizeShopState, purchaseShopItem } from "./shop.js";
 import { portraitHTML, installPortraitFallback } from "./portrait.js";
-import { arenaStats, createArenaTeam, alive, arenaOrder, takeArenaTurn, renderArenaTeam } from "./arena.js";
+import { arenaStats, createArenaTeam, alive, arenaOrder, takeArenaTurn, applyArenaAttack, applyArenaHeal, renderArenaTeam } from "./arena.js";
 const $=s=>document.querySelector(s), clone=v=>JSON.parse(JSON.stringify(v));
 // 화면에 글자를 넣을 때 HTML로 해석되지 않도록 변환합니다. (백업 파일에 악의적인 이름이 있어도 안전)
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -146,67 +146,95 @@ let arenaSelection=[],arenaBattle=null;
 function renderArena(){
  const host=$("#arena-roster");if(!host)return;const owned=gameState.generals.filter(g=>g.owned);
  arenaSelection=arenaSelection.filter(id=>owned.some(g=>g.id===id));if(!arenaSelection.length)arenaSelection=owned.slice(0,4).map(g=>g.id);
- host.innerHTML=owned.map(g=>{const st=arenaStats(g,gameState.inventory.equipment||[]),on=arenaSelection.includes(g.id);return `<label class="arena-pick ${on?"selected":""}"><input type="checkbox" data-arena-pick="${esc(g.id)}" ${on?"checked":""} ${arenaSelection.length>=4&&!on?"disabled":""}><span><b>${esc(g.name)}</b><small>${esc(g.faction)} · ${esc(g.rank)} · Lv.${g.level||1}</small><small>HP ${st.hp} · ATK ${st.atk} · DEF ${st.def} · SPD ${st.spd}</small></span></label>`}).join("")||'<p class="muted">보유 장수가 없습니다.</p>';
+ host.innerHTML=owned.map(g=>{const st=arenaStats(g,gameState.inventory.equipment||[]),on=arenaSelection.includes(g.id);return `<label class="arena-pick ${on?"selected":""}"><input type="checkbox" data-arena-pick="${esc(g.id)}" ${on?"checked":""} ${arenaSelection.length>=4&&!on?"disabled":""}><span><b>${esc(g.name)}</b><small>${esc(g.faction)} · ${esc(g.rank)} · Lv.${g.level||1}</small><small>HP ${st.hp} · ATK ${st.atk} · DEF ${st.def} · SPD ${st.spd}</small><small class="arena-pick-trait">필살기 · ${esc(st.skill.name)} (${st.skill.type==="heal"?"회복형":st.skill.kind==="self"?"자기 강화":"공격형"})</small></span></label>`}).join("")||'<p class="muted">보유 장수가 없습니다.</p>';
  $("#arena-selected-count").textContent=`${arenaSelection.length} / 4`;$("#arena-start").disabled=arenaSelection.length!==4;
- const a=gameState.arena||{};$("#arena-wins").textContent=a.wins||0;$("#arena-losses").textContent=a.losses||0;$("#arena-points").textContent=a.points||0;
 }
 function arenaMessage(message){$("#arena-turn-message").textContent=message}
+function renderArenaActions(){
+ const host=$("#arena-action-options");if(!host||!arenaBattle)return;
+ const actor=arenaBattle.player.find(x=>x.id===arenaBattle.actorId);
+ if(arenaBattle.phase!=="action"||!actor){host.innerHTML="";return}
+ const cooling=actor.skillCooldown>0;
+ host.innerHTML=`<button class="primary-btn" data-arena-action="attack">일반 공격</button><button class="secondary-btn" data-arena-action="skill" ${cooling?"disabled":""}>필살기 ${cooling?"(대기 "+actor.skillCooldown+")":""}</button>`;
+}
 function renderArenaBattle(){
  if(!arenaBattle)return;
- const {player,enemy,actorId,phase,log}=arenaBattle;
+ const {player,enemy,actorId,phase}=arenaBattle;
  $("#arena-result").classList.remove("hidden");
  $("#arena-enemy-alive").textContent=enemy.filter(x=>x.hp>0).length;$("#arena-player-alive").textContent=player.filter(x=>x.hp>0).length;
- $("#arena-enemy-team").innerHTML=renderArenaTeam(gameState.generals,enemy,{activeId:actorId,selectable:phase==="target"});
- $("#arena-player-team").innerHTML=renderArenaTeam(gameState.generals,player,{activeId:actorId});
- $("#arena-log").innerHTML=log.slice(-18).map(x=>`<li>${esc(x)}</li>`).join("");
+ $("#arena-enemy-team").innerHTML=renderArenaTeam(gameState.generals,enemy,{activeId:actorId,selectable:phase==="target"||phase==="skill-target"});
+ $("#arena-player-team").innerHTML=renderArenaTeam(gameState.generals,player,{activeId:actorId,healable:phase==="heal-target"});
+ renderArenaActions();
+}
+function completeArenaAction(actor){
+ arenaBattle.actedIds.push(actor.id);arenaBattle.phase="resolving";renderArenaBattle();window.setTimeout(nextArenaActor,650);
 }
 function nextArenaActor(){
- if(!arenaBattle)return;
+ if(!arenaBattle||arenaBattle.finished)return;
  if(!alive(arenaBattle.player).length||!alive(arenaBattle.enemy).length)return finishArena();
- const order=arenaOrder(arenaBattle.player,arenaBattle.enemy);
- const actor=order.find(u=>!arenaBattle.actedIds.includes(u.id));
+ const order=arenaOrder(arenaBattle.player,arenaBattle.enemy),actor=order.find(u=>!arenaBattle.actedIds.includes(u.id));
  if(!actor){arenaBattle.actedIds=[];return nextArenaActor()}
- arenaBattle.actorId=actor.id;arenaBattle.phase=actor.team==="player"?"target":"enemy";
- if(actor.team==="player"){arenaMessage(`내 차례: ${actor.name}이(가) 행동합니다. 위쪽 적 카드 중 공격 대상을 선택하세요.`);renderArenaBattle();return}
- const targets=alive(arenaBattle.player).sort((a,b)=>a.hp/a.stats.maxHp-b.hp/b.stats.maxHp);
- const target=targets[0];arenaMessage(`상대 차례: ${actor.name} → ${target.name}`);
- arenaBattle.log.push("상대 행동 · "+actor.name+"의 공격 준비");
- renderArenaBattle();
- window.setTimeout(()=>{if(!arenaBattle||arenaBattle.actorId!==actor.id)return;takeArenaTurn(actor,target,arenaBattle.log);arenaBattle.actedIds.push(actor.id);renderArenaBattle();window.setTimeout(nextArenaActor,650)},550);
+ arenaBattle.actorId=actor.id;
+ if(actor.team==="player"){
+  arenaBattle.phase="action";arenaMessage(`내 차례: ${actor.name}. 일반 공격 또는 필살기를 선택하세요.`);renderArenaBattle();return;
+ }
+ arenaBattle.phase="enemy";const foes=alive(arenaBattle.player),friends=alive(arenaBattle.enemy);
+ const target=foes.sort((a,b)=>a.hp/a.stats.maxHp-b.hp/b.stats.maxHp)[0];
+ arenaMessage(`상대 차례: ${actor.name}의 행동`);renderArenaBattle();
+ window.setTimeout(()=>{
+  if(!arenaBattle||arenaBattle.actorId!==actor.id)return;
+  const skill=actor.skillCooldown<=0&&Math.random()<.48;
+  if(skill&&actor.skill.kind==="ally"){
+   const ally=friends.filter(x=>x.hp<x.stats.maxHp).sort((a,b)=>a.hp/a.stats.maxHp-b.hp/b.stats.maxHp)[0];
+   if(ally)applyArenaHeal(actor,ally,arenaBattle.log);else applyArenaAttack(actor,target,arenaBattle.log,false);
+  }else applyArenaAttack(actor,target,arenaBattle.log,skill);
+  arenaBattle.actedIds.push(actor.id);arenaBattle.phase="resolving";renderArenaBattle();window.setTimeout(nextArenaActor,700);
+ },550);
 }
 function startArena(){
  if(arenaSelection.length!==4)return notify("아레나 출전 장수 4명을 선택해주세요.");
  const pool=gameState.generals.filter(g=>!arenaSelection.includes(g.id));
  const enemy=[...pool].sort((a,b)=>calculatePower(b,gameState.inventory.equipment||[])-calculatePower(a,gameState.inventory.equipment||[])).slice(0,4).map(g=>g.id);
  if(enemy.length<4)return notify("대전 상대 장수가 부족합니다.");
- const playerTeam=createArenaTeam(gameState.generals,arenaSelection,gameState.inventory.equipment||[]);
- const enemyTeam=createArenaTeam(gameState.generals,enemy,gameState.inventory.equipment||[],true);
- arenaBattle={player:playerTeam,enemy:enemyTeam,actorId:null,phase:"",actedIds:[],log:["아레나 대전 시작! 속도가 빠른 장수부터 행동합니다."],finished:false};
+ arenaBattle={player:createArenaTeam(gameState.generals,arenaSelection,gameState.inventory.equipment||[]),enemy:createArenaTeam(gameState.generals,enemy,gameState.inventory.equipment||[],true),actorId:null,phase:"",actedIds:[],log:[],finished:false};
  $("#arena-start").disabled=true;$("#arena-setup").classList.add("hidden");$("#arena-result").classList.remove("hidden");
  $("#arena-action-controls").classList.remove("hidden");$("#arena-turn-message").textContent="전투 순서를 계산하고 있습니다.";
- $("#arena-player-team").innerHTML="";$("#arena-enemy-team").innerHTML="";renderArenaBattle();
- window.setTimeout(nextArenaActor,500);
+ $("#arena-player-team").innerHTML="";$("#arena-enemy-team").innerHTML="";renderArenaBattle();window.setTimeout(nextArenaActor,450);
 }
-function chooseArenaTarget(id){
- if(!arenaBattle||arenaBattle.phase!=="target")return;
+function chooseArenaAction(action){
+ if(!arenaBattle||arenaBattle.phase!=="action")return;
+ const actor=arenaBattle.player.find(x=>x.id===arenaBattle.actorId);if(!actor)return;
+ if(action==="attack"){arenaBattle.phase="target";arenaMessage(actor.name+"의 일반 공격: 위쪽 적 카드에서 대상을 선택하세요.");renderArenaBattle();return}
+ if(action!=="skill"||actor.skillCooldown>0)return;
+ if(actor.skill.kind==="ally"){
+  arenaBattle.phase="heal-target";arenaMessage(actor.name+"의 회복 필살기: 아래쪽 아군 카드에서 회복 대상을 선택하세요.");renderArenaBattle();return;
+ }
+ if(actor.skill.kind==="self"){
+  const target=alive(arenaBattle.enemy)[0];applyArenaAttack(actor,target,arenaBattle.log,true);arenaMessage(actor.name+" 필살기 발동!");completeArenaAction(actor);return;
+ }
+ arenaBattle.phase="skill-target";arenaMessage(actor.name+" 필살기: 위쪽 적 카드에서 대상을 선택하세요.");renderArenaBattle();
+}
+function chooseArenaTarget(id,useSkill=false){
+ if(!arenaBattle||!["target","skill-target"].includes(arenaBattle.phase))return;
  const actor=arenaBattle.player.find(x=>x.id===arenaBattle.actorId),target=arenaBattle.enemy.find(x=>x.id===id);
  if(!actor||!target||target.hp<=0)return;
- arenaMessage(actor.name+"이(가) "+target.name+"을(를) 공격합니다.");
- takeArenaTurn(actor,target,arenaBattle.log);arenaBattle.actedIds.push(actor.id);arenaBattle.phase="resolving";renderArenaBattle();
- window.setTimeout(nextArenaActor,700);
+ applyArenaAttack(actor,target,arenaBattle.log,useSkill);arenaMessage(actor.name+" → "+target.name+(useSkill?" 필살기 발동":" 공격"));completeArenaAction(actor);
+}
+function chooseArenaHealTarget(id){
+ if(!arenaBattle||arenaBattle.phase!=="heal-target")return;
+ const actor=arenaBattle.player.find(x=>x.id===arenaBattle.actorId),target=arenaBattle.player.find(x=>x.id===id);
+ if(!actor||!target||target.hp<=0||actor.skill.kind!=="ally")return;
+ const result=applyArenaHeal(actor,target,arenaBattle.log);if(!result.ok)return notify(result.reason||"회복할 수 없습니다.");
+ arenaMessage(actor.name+"이(가) "+target.name+"의 체력을 회복했습니다.");completeArenaAction(actor);
 }
 async function finishArena(){
  if(!arenaBattle||arenaBattle.finished)return;arenaBattle.finished=true;
- const win=alive(arenaBattle.player).length>0;const next=clone(gameState);next.arena=next.arena||{wins:0,losses:0,points:0};
+ const win=alive(arenaBattle.player).length>0,next=clone(gameState);next.arena=next.arena||{wins:0,losses:0,points:0};
  if(win){next.arena.wins++;next.arena.points+=20}else next.arena.losses++;
- await commitState(next);
- arenaMessage(win?"승리! 아레나 포인트 20점을 획득했습니다.":"패배했습니다. 편성을 바꾸어 다시 도전해보세요.");
- arenaBattle.phase="finished";arenaBattle.log.unshift(win?"아레나 승리 · 포인트 +20":"아레나 패배");
- $("#arena-action-controls").classList.add("hidden");$("#arena-again").classList.remove("hidden");renderArenaBattle();
- notify(win?"아레나 승리! 20 포인트를 획득했습니다.":"아레나 패배.");
+ await commitState(next);arenaMessage(win?"승리! 아레나 포인트 20점을 획득했습니다.":"패배했습니다. 편성을 바꾸어 다시 도전해보세요.");
+ arenaBattle.phase="finished";$("#arena-action-controls").classList.add("hidden");$("#arena-again").classList.remove("hidden");renderArenaBattle();notify(win?"아레나 승리! 20 포인트를 획득했습니다.":"아레나 패배.");
 }
 function resetArena(){arenaBattle=null;$("#arena-result").classList.add("hidden");$("#arena-setup").classList.remove("hidden");$("#arena-action-controls").classList.add("hidden");$("#arena-again").classList.add("hidden");$("#arena-start").disabled=arenaSelection.length!==4;renderArena()}
-
 function renderTraining(){const host=$("#training-list");if(!host)return;const owned=gameState.generals.filter(g=>g.owned);$("#training-manuals").textContent=gameState.inventory.expManual||0;$("#training-stones").textContent=gameState.inventory.awakeningStone||0;host.innerHTML=owned.map(g=>{normalizeGeneralProgress(g);const need=g.level>=30?0:expRequired(g.level);const pct=need?Math.min(100,g.exp/need*100):100;return `<article class="training-card"><div class="training-head">${portraitHTML(g)}<div class="training-name"><strong>${esc(g.name)}</strong><span>${esc(g.rank)} · Lv.${g.level} · 각성 ${g.awakening}/${MAX_AWAKENING}</span></div></div><div class="training-progress"><div class="training-progress-fill" style="width:${pct}%"></div></div><p class="muted small">${g.level>=30?"최고 레벨":"경험치 "+g.exp+" / "+need}</p><div class="training-actions"><button class="secondary-btn" data-train="${esc(g.id)}" ${!gameState.inventory.expManual||g.level>=30?"disabled":""}>경험서 사용 (+${EXP_MANUAL_VALUE})</button><button class="primary-btn" data-awaken="${esc(g.id)}" ${!gameState.inventory.awakeningStone||g.awakening>=MAX_AWAKENING?"disabled":""}>각성 (${AWAKEN_STONE_COST}개)</button></div></article>`}).join("")||'<p class="muted">보유한 장수가 없습니다. 먼저 장수를 모집하세요.</p>'}
 async function trainGeneral(id){const g=gameState.generals.find(x=>x.id===id);if(!g||!g.owned)return;if((gameState.inventory.expManual||0)<1)return notify("경험서가 부족합니다.");if(g.level>=30)return notify("이미 최고 레벨입니다.");const next=clone(gameState);next.inventory.expManual--;const idx=next.generals.findIndex(x=>x.id===id);const result=addExperience(next.generals[idx],EXP_MANUAL_VALUE);next.generals[idx]=result.general;await commitState(next);notify(`${g.name} 경험치 +${EXP_MANUAL_VALUE}${result.levels?` · 레벨 ${result.general.level} 달성`:""}`)}
 async function awaken(id){const res=awakenGeneral(gameState,id);if(!res.ok)return notify(res.reason);await commitState(res.state);notify(`${res.general.name} 각성 ${res.general.awakening}단계 달성!`)}
@@ -240,5 +268,5 @@ document.addEventListener("click",e=>{const flip=e.target.closest("[data-arena-f
 $("#campaign-stages").addEventListener("click",e=>{const b=e.target.closest("button[data-stage]");if(!b)return;const n=Number(b.dataset.stage);if(n>normalizeCampaignState(gameState.campaign).unlockedStage)return notify("이전 전장을 먼저 승리해주세요.");if((battle?.selectedIds||[]).length!==3){switchTab("battle");notify("전장에 출전할 장수 3명을 먼저 선택해주세요.");return}startBattle(n);switchTab("battle");});
 $("#shop-items").addEventListener("click",async e=>{const b=e.target.closest("button[data-shop-buy]");if(b)await buyShopItem(b.dataset.shopBuy)});$("#equipment-general").addEventListener("change",renderEquipment);$("#equipment-craft").addEventListener("click",craftSelectedEquipment);$("#equipment-view").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;const id=$("#equipment-general").value;if(b.dataset.equip)await equipmentAction(equipItem(gameState,id,b.dataset.equip),"장비를 장착했습니다.");if(b.dataset.unequip)await equipmentAction(unequipItem(gameState,id,b.dataset.unequip),"장비를 해제했습니다.");if(b.dataset.enhance)await equipmentAction(enhanceItem(gameState,b.dataset.enhance),"강화에 성공했습니다. 장비는 파괴되지 않습니다.");if(b.dataset.dismantle)await equipmentAction(dismantleItem(gameState,b.dataset.dismantle),"장비를 분해했습니다.")});
 $("#battle-roster").addEventListener("change",e=>{const id=e.target.dataset.pick;if(!id)return;battle=battle||{selectedIds:[],active:false};if(e.target.checked){if(battle.selectedIds.length<3)battle.selectedIds.push(id);else e.target.checked=false}else battle.selectedIds=battle.selectedIds.filter(x=>x!==id);renderSetup()});
-$("#start-battle").addEventListener("click",()=>startBattle());$("#arena-roster").addEventListener("change",e=>{const id=e.target.dataset.arenaPick;if(!id)return;if(e.target.checked){if(arenaSelection.length<4)arenaSelection.push(id);else e.target.checked=false}else arenaSelection=arenaSelection.filter(x=>x!==id);renderArena()});$("#arena-start").addEventListener("click",startArena);$("#arena-again").addEventListener("click",resetArena);$("#arena-enemy-team").addEventListener("click",e=>{const b=e.target.closest("[data-arena-target]");if(b)chooseArenaTarget(b.dataset.arenaTarget)});$("#next-battle").addEventListener("click",resetBattle);$("#close-dialog").addEventListener("click",()=>$("#general-dialog").close());$("#export-btn").addEventListener("click",exportBackup);$("#copy-backup-btn").addEventListener("click",copyBackupText);$("#paste-import-btn").addEventListener("click",importBackupText);document.querySelectorAll("[data-app-version]").forEach(e=>e.textContent=APP_VERSION);$("#import-btn").addEventListener("click",importBackup);if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(console.error)}
+$("#start-battle").addEventListener("click",()=>startBattle());$("#arena-roster").addEventListener("change",e=>{const id=e.target.dataset.arenaPick;if(!id)return;if(e.target.checked){if(arenaSelection.length<4)arenaSelection.push(id);else e.target.checked=false}else arenaSelection=arenaSelection.filter(x=>x!==id);renderArena()});$("#arena-start").addEventListener("click",startArena);$("#arena-again").addEventListener("click",resetArena);$("#arena-enemy-team").addEventListener("click",e=>{const b=e.target.closest("[data-arena-target]");if(b)chooseArenaTarget(b.dataset.arenaTarget,arenaBattle?.phase==="skill-target")});$("#arena-player-team").addEventListener("click",e=>{const b=e.target.closest("[data-arena-heal-target]");if(b)chooseArenaHealTarget(b.dataset.arenaHealTarget)});$("#arena-action-options").addEventListener("click",e=>{const b=e.target.closest("[data-arena-action]");if(b)chooseArenaAction(b.dataset.arenaAction)});$("#next-battle").addEventListener("click",resetBattle);$("#close-dialog").addEventListener("click",()=>$("#general-dialog").close());$("#export-btn").addEventListener("click",exportBackup);$("#copy-backup-btn").addEventListener("click",copyBackupText);$("#paste-import-btn").addEventListener("click",importBackupText);document.querySelectorAll("[data-app-version]").forEach(e=>e.textContent=APP_VERSION);$("#import-btn").addEventListener("click",importBackup);if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(console.error)}
 init().catch(e=>{console.error(e);document.body.insertAdjacentHTML("beforeend",`<p style="padding:20px;color:#ffb4a9">게임 데이터를 불러오지 못했습니다. ${esc(e.message)} 저장 데이터는 삭제되지 않았습니다.</p>`)});
