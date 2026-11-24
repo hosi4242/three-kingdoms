@@ -70,7 +70,7 @@ console.log("[6] 전설 혼 조각 100개 → 미보유 전설 선택 영입");
   const before = JSON.stringify(s); const r = redeemLegend(s, target); check(r.ok && r.state.generals.find(g => g.id === target).owned && r.state.shards.전설 === 0 && JSON.stringify(s) === before, "100개로 선택한 전설 장수 영입, 조각 0, 원본 불변");
   const r2 = redeemLegend({ ...r.state, shards: { ...r.state.shards, 전설: 250 } }, legends[1].id); check(r2.ok && r2.state.shards.전설 === 150, "250개 보유 시 영입 후 150개 남음"); }
 
-console.log("[7] 저장 형식 변환 (v1 → v3)");
+console.log("[7] 저장 형식 변환 (v1 → v7)");
 { const v1 = { saveFormatVersion: 1, appDataVersion: "0.3.1", lord: { level: 3, exp: 10, gold: 4321, gems: 0 }, generals: clone(GENERAL_DATA.slice(0, 50)), inventory: { a: 1 }, settings: {}, records: { battleWins: 2, battleLosses: 1, duelCount: 3 } };
   v1.generals[4].owned = true; v1.generals[4].level = 7; const snap = JSON.stringify(v1);
   const m = D.migrateState(v1); ensureRecruitState(m);

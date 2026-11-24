@@ -2,6 +2,10 @@ const DB_NAME = "cheonhap-save";
 import { SAVE_FORMAT_VERSION } from "./version.js";
 import { defaultRecruitState, defaultShards } from "./recruit.js";
 import { normalizeGeneralProgress } from "./progression.js";
+import { ensureEquipmentState } from "./equipment.js";
+import { defaultCampaignState, normalizeCampaignState } from "./campaign.js";
+import { defaultMissionState, normalizeMissionState } from "./missions.js";
+import { defaultShopState, normalizeShopState } from "./shop.js";
 const DB_VERSION = 1;
 export { SAVE_FORMAT_VERSION };
 
@@ -42,6 +46,14 @@ export const MIGRATIONS = {
   1: st => { st.recruit = st.recruit || defaultRecruitState(); st.shards = st.shards || defaultShards(); },
   // 2 → 3 (v0.5.0): 장수 각성 필드와 육성 재화 추가
   2: st => { st.inventory = st.inventory || {}; if (st.inventory.expManual == null) st.inventory.expManual = 3; if (st.inventory.awakeningStone == null) st.inventory.awakeningStone = 0; for (const g of (st.generals || [])) normalizeGeneralProgress(g); },
+  // 3 → 4 (v0.6.0): 장비 보관함·재료·장수별 슬롯 추가. 기존 보유 장비/재화는 유지.
+  3: st => { st.inventory = st.inventory || {}; st.inventory.equipmentMaterials ??= 30; st.inventory.equipmentLeather ??= 10; st.inventory.equipmentJade ??= 0; st.inventory.equipment ??= []; for (const g of (st.generals || [])) { g.equipment ||= {}; for (const slot of ["무기","갑옷","군마","보물","병법서"]) g.equipment[slot] ??= null; } },
+  // 4 → 5 (v0.7.0): 오프라인 PvE 전장 진행도 추가. 기존 데이터는 유지합니다.
+  4: st => { st.campaign = normalizeCampaignState(st.campaign || defaultCampaignState()); },
+  // 5 → 6 (v0.8.0): 누적 임무·업적 완료 기록 추가. 기존 진행 데이터는 보존합니다.
+  5: st => { st.missions = normalizeMissionState(st.missions || defaultMissionState()); },
+  // 6 → 7 (v1.0.0): 게임 내 상점 구매 통계 추가. 기존 재화와 인벤토리는 유지합니다.
+  6: st => { st.shop = normalizeShopState(st.shop || defaultShopState()); },
 };
 export function migrateState(state){
   const migrated=JSON.parse(JSON.stringify(state));
@@ -52,6 +64,9 @@ export function migrateState(state){
     if(!step) throw new Error(`저장 형식 ${version}에서 ${version+1}로 변환하는 코드가 없습니다.`);
     step(migrated); version+=1; migrated.saveFormatVersion=version;
   }
+  migrated.campaign = normalizeCampaignState(migrated.campaign || defaultCampaignState());
+  migrated.missions = normalizeMissionState(migrated.missions || defaultMissionState());
+  migrated.shop = normalizeShopState(migrated.shop || defaultShopState());
   migrated.saveFormatVersion=SAVE_FORMAT_VERSION;
   return migrated;
 }

@@ -1,0 +1,227 @@
+[1] JavaScript 문법
+  OK   browser-test/js/app.js
+  OK   browser-test/js/campaign.js
+  OK   browser-test/js/combat.js
+  OK   browser-test/js/db.js
+  OK   browser-test/js/equipment.js
+  OK   browser-test/js/generals.js
+  OK   browser-test/js/missions.js
+  OK   browser-test/js/progression.js
+  OK   browser-test/js/recruit-ui.js
+  OK   browser-test/js/recruit.js
+  OK   browser-test/js/version.js
+  OK   android-apk-project/www/js/app.js
+  OK   android-apk-project/www/js/campaign.js
+  OK   android-apk-project/www/js/combat.js
+  OK   android-apk-project/www/js/db.js
+  OK   android-apk-project/www/js/equipment.js
+  OK   android-apk-project/www/js/generals.js
+  OK   android-apk-project/www/js/missions.js
+  OK   android-apk-project/www/js/progression.js
+  OK   android-apk-project/www/js/recruit-ui.js
+  OK   android-apk-project/www/js/recruit.js
+  OK   android-apk-project/www/js/version.js
+[2] 장수 데이터
+  OK   ID 중복 없음 (60명)
+  OK   이름 중복 없음
+  OK   능력치 범위·등급·성향·필살기/특성/약점 필드 모두 정상
+       등급별 인원: {"일반":10,"고급":6,"희귀":14,"영웅":18,"전설":12}
+  OK   필살기 이름 고유
+  OK   장수별 개별 전투 효과 데이터 존재
+  OK   장수별 전투 효과 조합 60종 고유
+  OK   모집에 필요한 일반 등급 장수 존재 (10명)
+  OK   모집에 필요한 고급 등급 장수 존재 (6명)
+  OK   모집에 필요한 희귀 등급 장수 존재 (14명)
+  OK   모집에 필요한 영웅 등급 장수 존재 (18명)
+  OK   모집에 필요한 전설 등급 장수 존재 (12명)
+[3] 버전 일치
+  OK   APP_VERSION(0.8.0) = sw.js CACHE_NAME(0.8.0)
+  OK   APP_VERSION = package.json(0.8.0)
+  OK   index.html 표시 기본값 ["0.8.0","0.8.0"]
+  OK   APP_VERSION = README 제목(0.8.0)
+  OK   폴더 이름(samgukji-cheonhap_v0_8_0_dual)에 버전 포함
+[4] PWA / 서비스워커
+  OK   캐시 목록 파일 존재: ./index.html
+  OK   캐시 목록 파일 존재: ./styles.css
+  OK   캐시 목록 파일 존재: ./manifest.webmanifest
+  OK   캐시 목록 파일 존재: ./icon-192.png
+  OK   캐시 목록 파일 존재: ./icon-512.png
+  OK   캐시 목록 파일 존재: ./js/app.js
+  OK   캐시 목록 파일 존재: ./js/db.js
+  OK   캐시 목록 파일 존재: ./js/generals.js
+  OK   캐시 목록 파일 존재: ./js/version.js
+  OK   캐시 목록 파일 존재: ./js/recruit.js
+  OK   캐시 목록 파일 존재: ./js/recruit-ui.js
+  OK   캐시 목록 파일 존재: ./js/progression.js
+  OK   캐시 목록 파일 존재: ./js/combat.js
+  OK   캐시 목록 파일 존재: ./js/equipment.js
+  OK   캐시 목록 파일 존재: ./js/campaign.js
+  OK   캐시 목록 파일 존재: ./js/missions.js
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_001.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_002.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_003.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_004.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_005.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_006.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_007.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_008.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_009.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_010.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_011.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_012.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_013.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_014.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_015.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_016.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_017.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_018.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_019.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_020.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_025.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_026.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_027.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_028.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_030.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_031.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_033.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_034.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_037.webp
+  OK   캐시 목록 파일 존재: ./assets/portraits/gen_040.webp
+  OK   오프라인 캐시에 포함: ./js/app.js
+  OK   오프라인 캐시에 포함: ./js/campaign.js
+  OK   오프라인 캐시에 포함: ./js/combat.js
+  OK   오프라인 캐시에 포함: ./js/db.js
+  OK   오프라인 캐시에 포함: ./js/equipment.js
+  OK   오프라인 캐시에 포함: ./js/generals.js
+  OK   오프라인 캐시에 포함: ./js/missions.js
+  OK   오프라인 캐시에 포함: ./js/progression.js
+  OK   오프라인 캐시에 포함: ./js/recruit-ui.js
+  OK   오프라인 캐시에 포함: ./js/recruit.js
+  OK   오프라인 캐시에 포함: ./js/version.js
+  OK   manifest 아이콘 등록
+  OK   아이콘 파일 존재: ./icon-192.png
+  OK   아이콘 파일 존재: ./icon-512.png
+  OK   index.html 참조 파일 존재: manifest.webmanifest
+  OK   index.html 참조 파일 존재: styles.css
+  OK   index.html 참조 파일 존재: js/app.js
+  OK   import 경로 존재: app.js → generals.js
+  OK   import 경로 존재: app.js → db.js
+  OK   import 경로 존재: app.js → version.js
+  OK   import 경로 존재: app.js → recruit.js
+  OK   import 경로 존재: app.js → recruit-ui.js
+  OK   import 경로 존재: app.js → progression.js
+  OK   import 경로 존재: app.js → combat.js
+  OK   import 경로 존재: app.js → equipment.js
+  OK   import 경로 존재: app.js → campaign.js
+  OK   import 경로 존재: app.js → missions.js
+  OK   import 경로 존재: combat.js → equipment.js
+  OK   import 경로 존재: db.js → version.js
+  OK   import 경로 존재: db.js → recruit.js
+  OK   import 경로 존재: db.js → progression.js
+  OK   import 경로 존재: db.js → equipment.js
+  OK   import 경로 존재: db.js → campaign.js
+  OK   import 경로 존재: db.js → missions.js
+  OK   import 경로 존재: recruit-ui.js → recruit.js
+[5] 브라우저 ↔ Android(www) 소스 일치
+  OK   파일 목록 동일 (47개)
+[6] 모집 시스템 자동 테스트 (확률·10회 보장·혼 조각·저장 변환)
+[1] 설정/데이터 일관성
+  OK   일반 모집 확률 합계 100%
+  OK   일반 모집: 일반 등급 장수 존재 (10명)
+  OK   일반 모집: 고급 등급 장수 존재 (6명)
+  OK   일반 모집: 희귀 등급 장수 존재 (14명)
+  OK   일반 모집: 영웅 등급 장수 존재 (18명)
+  OK   일반 모집: 보장 등급(고급) 이상이 확률표에 존재
+  OK   명장 모집 확률 합계 100%
+  OK   명장 모집: 희귀 등급 장수 존재 (14명)
+  OK   명장 모집: 영웅 등급 장수 존재 (18명)
+  OK   명장 모집: 전설 등급 장수 존재 (12명)
+  OK   명장 모집: 보장 등급(영웅) 이상이 확률표에 존재
+  OK   전설 모집 확률 합계 100%
+  OK   전설 모집: 영웅 등급 장수 존재 (18명)
+  OK   전설 모집: 전설 등급 장수 존재 (12명)
+  OK   전설 모집: 보장 등급(전설) 이상이 확률표에 존재
+  OK   미보유 전설 장수 존재(영입 대상)
+[2] 등급 확률 (보장 발동 전 '자연 모집' 기준, 장수 선택은 해당 등급 균등)
+       일반 모집 50,000회: 일반 54.88%(목표 55%) / 고급 30.16%(목표 30%) / 희귀 12.08%(목표 12%) / 영웅 2.89%(목표 3%)
+  OK   일반 모집: 보장 등급(고급↑) 연속 미출현 최대 9회 (≤ 9)
+       일반 모집 보장 포함 실제 고급↑ 비율 45.23%
+       명장 모집 50,000회: 희귀 64.70%(목표 65%) / 영웅 27.11%(목표 27%) / 전설 8.20%(목표 8%)
+  OK   명장 모집: 보장 등급(영웅↑) 연속 미출현 최대 9회 (≤ 9)
+       명장 모집 보장 포함 실제 영웅↑ 비율 35.78%
+       전설 모집 50,000회: 영웅 74.79%(목표 75%) / 전설 25.21%(목표 25%)
+  OK   전설 모집: 보장 등급(전설↑) 연속 미출현 최대 9회 (≤ 9)
+       전설 모집 보장 포함 실제 전설↑ 비율 26.65%
+[3] 10회 보장 (처음 상태에서 10연속 모집, 및 1회씩 여러 번 모집해도 누적 보장)
+  OK   일반 모집: 10연속 모집 500회 중 보장 등급 없는 경우 0번
+  OK   일반 모집: 1회씩 8천 번 모집해도 연속 미출현 최대 9회
+  OK   명장 모집: 10연속 모집 500회 중 보장 등급 없는 경우 0번
+  OK   명장 모집: 1회씩 8천 번 모집해도 연속 미출현 최대 9회
+  OK   전설 모집: 10연속 모집 500회 중 보장 등급 없는 경우 0번
+  OK   전설 모집: 1회씩 8천 번 모집해도 연속 미출현 최대 9회
+  OK   일반 모집: 항상 최저 등급이 나오는 최악 난수에서도 10·20번째에 보장 발동 [10,20]
+  OK   전설 모집 10번째 보장 결과는 전설
+  OK   전설 모집 20번째 보장 결과는 전설
+  OK   전설 모집 최악 난수 보장 위치 [10,20]
+[4] 최소 등급 / 중복 → 혼 조각
+  OK   일반 모집: 확률표에 없는 등급이 나온 횟수 0
+  OK   명장 모집: 확률표에 없는 등급이 나온 횟수 0
+  OK   전설 모집: 확률표에 없는 등급이 나온 횟수 0
+  OK   전원 보유 상태: 혼 조각 합계 6972 = 기대 6972
+  OK   중복 모집으로 장수가 늘거나 줄지 않음
+  OK   NEW/중복 구분 및 혼 조각 누적 일치
+[5] 금화·원자성(실패 시 원본 보존)
+  OK   금화 부족(10회 900 필요/150 보유) → 실패, 원본 불변
+  OK   1회 100금 차감, 입력 state 불변
+  OK   정확히 900금으로 10회 가능 → 잔액 0
+  OK   잔액 0에서 모집 불가
+  OK   잘못된 요청 거부: nope/1
+  OK   잘못된 요청 거부: normal/0
+  OK   잘못된 요청 거부: normal/5
+  OK   잘못된 요청 거부: normal/-1
+  OK   전설 10회 비용 13,500 차감
+[6] 전설 혼 조각 100개 → 미보유 전설 선택 영입
+  OK   혼 조각 99개: 영입 불가
+  OK   이미 보유한 전설은 영입 불가
+  OK   전설이 아닌 장수는 영입 불가
+  OK   100개로 선택한 전설 장수 영입, 조각 0, 원본 불변
+  OK   250개 보유 시 영입 후 150개 남음
+[7] 저장 형식 변환 (v1 → v6)
+  OK   기존 금화·전적·인벤토리·장수 상태 유지
+  OK   recruit/shards 기본값 생성
+  OK   v0.5.0 육성 재화·각성 필드 마이그레이션
+  OK   변환 입력 객체 불변
+  OK   더 새로운 저장 형식은 오류로 거부 (데이터 덮어쓰기 방지)
+  OK   최신 형식은 그대로 통과
+  OK   손상된 recruit/shards 값 자동 보정
+
+결과: 모집 시스템 테스트 모두 통과
+  OK   tools/test-recruit.mjs 전체 통과
+[7] 장수 육성 테스트
+OK 경험치 100으로 Lv.2 상승
+OK 최대 레벨 30 상한
+OK 각성석 3개로 1단계 각성
+OK 존재하지 않는 장수 각성 거부
+OK 각성석 부족 시 각성 거부
+OK 최대 각성 단계 제한
+OK 비정상 진행 데이터 상한 보정
+progression tests passed
+  OK   tools/test-progression.mjs 전체 통과
+[8] 장수별 전투 효과 테스트
+OK 60명 전투력·특성·필살기 계산 유효
+OK 장수별 약점 대상과 페널티 적용
+OK 상성 우위일 때 개별 필살기 추가 보너스 적용
+OK 각성 1단계당 전투력 +3
+combat tests passed
+  OK   tools/test-combat.mjs 전체 통과
+[9] 장비 시스템 테스트
+장비 슬롯·제작·장착 제한·강화 +10·비파괴·해제·분해·세트 2/3/5 효과·저장 형식 3→6 검사 통과
+  OK   tools/test-equipment.mjs 전체 통과
+[10] 전장·토벌 시스템 테스트
+전장 15단계·저장 형식 4→6·기존 데이터 보존·최초/반복 보상·잠금 우회 방지·적 팀 구성 검사 통과
+  OK   tools/test-campaign.mjs 전체 통과
+[11] 누적 임무·업적 테스트
+임무 13종·누적 진행도·자동 보상·중복 지급 방지·저장 형식 5→6 마이그레이션 검사 통과
+  OK   tools/test-missions.mjs 전체 통과
+
+결과: 모든 정적 검사 통과

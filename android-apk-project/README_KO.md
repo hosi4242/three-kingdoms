@@ -1,7 +1,10 @@
-# Android APK 제작 안내 (v0.5.0)
+# Android 프로젝트 - 삼국지: 천하패권 v1.0.0
 
-- `www/`에 브라우저 게임 소스가 포함되어 있습니다.
-- Windows PC에서 Node.js, JDK, Android Studio/SDK를 준비한 뒤 `BUILD_APK_WINDOWS.bat`을 실행합니다.
-- Android 휴대폰에서는 BAT 파일을 실행할 수 없습니다.
-- 현재 패키지에는 APK 바이너리가 포함되어 있지 않습니다. 실제 빌드·서명·기기 설치 테스트는 별도 작업입니다.
-- 브라우저 IndexedDB와 Android 앱 저장 공간은 별개입니다. 기기 이동 전 JSON/텍스트 백업을 권장합니다.
+이 폴더는 Capacitor 기반 Android 래퍼 프로젝트입니다. 게임 웹 소스는 `www/`에 있습니다.
+
+- 앱 버전: 1.0.0
+- 저장 형식: 7
+- 웹/PWA와 Android `www` 소스는 `node tools/verify.mjs`로 일치 여부를 확인합니다.
+- APK 빌드는 Android Studio 및 Android SDK가 설치된 Windows 환경에서 `BUILD_APK_WINDOWS.bat`을 사용합니다.
+
+주의: 이 프로젝트 ZIP만으로 APK가 생성된 것은 아닙니다. APK 빌드 및 실제 기기 설치 검증은 별도 단계입니다.

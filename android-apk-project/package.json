@@ -1,8 +1,8 @@
 {
   "name": "cheonhap-android",
-  "version": "0.5.0",
+  "version": "2.0.2",
   "private": true,
-  "description": "삼국지: 천하패권 Android APK wrapper",
+  "description": "삼국지: 천하패권 v2.0.2 Android APK wrapper",
   "scripts": {
     "android:add": "cap add android",
     "android:sync": "cap sync android",

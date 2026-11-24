@@ -12,7 +12,7 @@ export const GENERAL_DATA = [
       "politics": 98,
       "charm": 94
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_001.webp",
     "owned": true,
     "level": 1,
     "exp": 0,
@@ -53,7 +53,7 @@ export const GENERAL_DATA = [
       "politics": 70,
       "charm": 82
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_002.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -94,7 +94,7 @@ export const GENERAL_DATA = [
       "politics": 68,
       "charm": 86
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_003.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -135,7 +135,7 @@ export const GENERAL_DATA = [
       "politics": 42,
       "charm": 66
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_004.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -176,7 +176,7 @@ export const GENERAL_DATA = [
       "politics": 96,
       "charm": 92
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_005.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -217,7 +217,7 @@ export const GENERAL_DATA = [
       "politics": 88,
       "charm": 91
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_006.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -258,7 +258,7 @@ export const GENERAL_DATA = [
       "politics": 91,
       "charm": 89
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_007.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -299,7 +299,7 @@ export const GENERAL_DATA = [
       "politics": 66,
       "charm": 75
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_008.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -340,7 +340,7 @@ export const GENERAL_DATA = [
       "politics": 52,
       "charm": 65
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_009.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -381,7 +381,7 @@ export const GENERAL_DATA = [
       "politics": 65,
       "charm": 80
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_010.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -422,7 +422,7 @@ export const GENERAL_DATA = [
       "politics": 85,
       "charm": 99
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_011.webp",
     "owned": true,
     "level": 1,
     "exp": 0,
@@ -463,7 +463,7 @@ export const GENERAL_DATA = [
       "politics": 70,
       "charm": 96
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_012.webp",
     "owned": true,
     "level": 1,
     "exp": 0,
@@ -504,7 +504,7 @@ export const GENERAL_DATA = [
       "politics": 38,
       "charm": 79
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_013.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -545,7 +545,7 @@ export const GENERAL_DATA = [
       "politics": 65,
       "charm": 95
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_014.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -586,7 +586,7 @@ export const GENERAL_DATA = [
       "politics": 96,
       "charm": 98
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_015.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -627,7 +627,7 @@ export const GENERAL_DATA = [
       "politics": 62,
       "charm": 84
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_016.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -668,7 +668,7 @@ export const GENERAL_DATA = [
       "politics": 50,
       "charm": 82
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_017.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -709,7 +709,7 @@ export const GENERAL_DATA = [
       "politics": 45,
       "charm": 68
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_018.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -750,7 +750,7 @@ export const GENERAL_DATA = [
       "politics": 82,
       "charm": 87
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_019.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -791,7 +791,7 @@ export const GENERAL_DATA = [
       "politics": 80,
       "charm": 88
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_020.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -996,7 +996,7 @@ export const GENERAL_DATA = [
       "politics": 60,
       "charm": 85
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_025.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1037,7 +1037,7 @@ export const GENERAL_DATA = [
       "politics": 55,
       "charm": 81
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_026.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1078,7 +1078,7 @@ export const GENERAL_DATA = [
       "politics": 65,
       "charm": 78
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_027.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1119,7 +1119,7 @@ export const GENERAL_DATA = [
       "politics": 68,
       "charm": 80
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_028.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1201,7 +1201,7 @@ export const GENERAL_DATA = [
       "politics": 70,
       "charm": 92
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_030.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1242,7 +1242,7 @@ export const GENERAL_DATA = [
       "politics": 35,
       "charm": 82
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_031.webp",
     "owned": true,
     "level": 1,
     "exp": 0,
@@ -1324,7 +1324,7 @@ export const GENERAL_DATA = [
       "politics": 75,
       "charm": 99
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_033.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1365,7 +1365,7 @@ export const GENERAL_DATA = [
       "politics": 90,
       "charm": 88
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_034.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1488,7 +1488,7 @@ export const GENERAL_DATA = [
       "politics": 76,
       "charm": 89
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_037.webp",
     "owned": false,
     "level": 1,
     "exp": 0,
@@ -1611,7 +1611,7 @@ export const GENERAL_DATA = [
       "politics": 35,
       "charm": 60
     },
-    "portrait": null,
+    "portrait": "./assets/portraits/gen_040.webp",
     "owned": false,
     "level": 1,
     "exp": 0,

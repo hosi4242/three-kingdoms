@@ -29,6 +29,23 @@ check(new Set(G.map(g=>g.skillName)).size===G.length,"필살기 이름 고유");
 check(G.every(g=>g.combatEffects?.passive?.stat&&Number.isFinite(g.combatEffects.passive.rate)&&Number.isFinite(g.combatEffects?.ultimate?.base)&&Number.isFinite(g.combatEffects?.ultimate?.counterBonus)&&g.combatEffects?.weakness?.style&&Number.isFinite(g.combatEffects.weakness.penalty)),"장수별 개별 전투 효과 데이터 존재");
 check(new Set(G.map(g=>JSON.stringify(g.combatEffects))).size===G.length,"장수별 전투 효과 조합 60종 고유");
 for(const r of RANKS) check(byRank[r]>0,`모집에 필요한 ${r} 등급 장수 존재 (${byRank[r]}명)`);
+console.log("[2-1] 장수 초상화 현황");
+const portraitMissing=[]; let portraitPresent=0;
+for(const g of G){
+  if(g.portrait){
+    const file=path.join(B,g.portrait.replace(/^\.\//,""));
+    if(fs.existsSync(file)) portraitPresent++; else bad(`초상화 경로 누락: ${g.id} ${g.name} → ${g.portrait}`);
+  } else portraitMissing.push(`${g.id} ${g.name}`);
+}
+ok(`초상화 파일 연결 ${portraitPresent}/${G.length}명`);
+{const swTxt=fs.readFileSync(path.join(B,"sw.js"),"utf8"), cached=JSON.parse(/APP_FILES\s*=\s*(\[[^\]]*\])/.exec(swTxt)[1]);
+  const linked=G.filter(g=>g.portrait).map(g=>g.portrait); const notCached=linked.filter(p=>!cached.includes(p));
+  check(notCached.length===0,`연결된 초상화 ${linked.length}개 모두 오프라인 캐시 목록에 포함`+(notCached.length?` (누락: ${notCached.join(", ")})`:""));
+  const extraCached=cached.filter(f=>f.startsWith("./assets/portraits/")&&!linked.includes(f)); check(extraCached.length===0,"캐시 목록에 연결되지 않은 초상화 없음"+(extraCached.length?` (${extraCached.join(", ")})`:""));
+  const appJs=fs.readFileSync(path.join(B,"js","app.js"),"utf8"), ruiJs=fs.readFileSync(path.join(B,"js","recruit-ui.js"),"utf8");
+  check(/installPortraitFallback\(\)/.test(appJs),"이미지 로드 실패 대체 표시(fallback) 설치"); check(/portraitHTML\(g\)/.test(ruiJs),"모집 결과 카드가 공통 초상화 렌더러 사용"); check(/portraitHTML\(g,"portrait-sm"\)/.test(appJs),"전투 편성 화면 초상화 적용");
+  check(/old\.portrait=fresh\.portrait/.test(appJs),"기존 저장 데이터에도 최신 초상화 경로 반영");}
+if(portraitMissing.length) warn(`초상화 미제작 ${portraitMissing.length}명: ${portraitMissing.join(", ")}`);
 const s3=new Set(G.map(g=>g.skillDesc)).size; if(s3<G.length/2) warn(`필살기 설명이 ${s3}종뿐 (장수별 고유 설명 아님 - 알려진 미해결 사항)`);
 
 console.log("[3] 버전 일치");
@@ -60,5 +77,17 @@ console.log("[7] 장수 육성 테스트");
 try{execFileSync(process.execPath,[path.join(root,"tools","test-progression.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-progression.mjs 전체 통과")}catch(e){bad("tools/test-progression.mjs 실패") }
 console.log("[8] 장수별 전투 효과 테스트");
 try{execFileSync(process.execPath,[path.join(root,"tools","test-combat.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-combat.mjs 전체 통과")}catch(e){bad("tools/test-combat.mjs 실패")}
+console.log("[9] 장비 시스템 테스트");
+try{execFileSync(process.execPath,[path.join(root,"tools","test-equipment.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-equipment.mjs 전체 통과")}catch(e){bad("tools/test-equipment.mjs 실패")}
 fs.rmSync(tmp,{recursive:true,force:true});
+console.log("[10] 전장·토벌 시스템 테스트");
+try{execFileSync(process.execPath,[path.join(root,"tools","test-campaign.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-campaign.mjs 전체 통과")}catch(e){bad("tools/test-campaign.mjs 실패")}
+console.log("[11] 누적 임무·업적 테스트");
+try{execFileSync(process.execPath,[path.join(root,"tools","test-missions.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-missions.mjs 전체 통과")}catch(e){bad("tools/test-missions.mjs 실패")}
+console.log("[12] 상점·저장 형식 6→7 테스트");
+try{execFileSync(process.execPath,[path.join(root,"tools","test-shop.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-shop.mjs 전체 통과")}catch(e){bad("tools/test-shop.mjs 실패")}
+console.log("[13] 초상화 렌더러 테스트");
+try{execFileSync(process.execPath,[path.join(root,"tools","test-portrait.mjs")],{stdio:"inherit",timeout:15000});ok("tools/test-portrait.mjs 전체 통과")}catch(e){bad("tools/test-portrait.mjs 실패")}
+console.log("[14] 4대4 아레나 엔진 테스트");
+try{execFileSync(process.execPath,[path.join(root,"tools","test-arena.mjs")],{stdio:"inherit",timeout:30000});ok("tools/test-arena.mjs 전체 통과")}catch(e){bad("tools/test-arena.mjs 실패")}
 console.log(fail?`\n결과: ${fail}건 실패`:"\n결과: 모든 정적 검사 통과"); process.exit(fail?1:0);

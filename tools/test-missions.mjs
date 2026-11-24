@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import { MISSION_DEFS, defaultMissionState, normalizeMissionState, missionMetrics, applyMissionProgress } from "../browser-test/js/missions.js";
+import { migrateState } from "../browser-test/js/db.js";
+const generals=Array.from({length:40},(_,i)=>({id:`g${i}`,owned:i<5,level:1}));
+let state={saveFormatVersion:5,lord:{gold:100},generals:generals.slice(0,5),inventory:{equipmentMaterials:0,equipmentLeather:0,equipmentJade:0,expManual:0,awakeningStone:0},records:{battleWins:0},recruit:{totalPulls:{normal:0,elite:0,legend:0}},campaign:{unlockedStage:1,clearedStages:[]}};
+const migrated=migrateState(state);assert.equal(migrated.saveFormatVersion,7);assert.deepEqual(migrated.missions,defaultMissionState());assert.equal(migrated.lord.gold,100);assert.deepEqual(migrated.shop,{purchaseCount:0,totalGoldSpent:0});
+state=migrated;state.records.battleWins=1;let earned=applyMissionProgress(state);assert.ok(earned.some(x=>x.id==="first_battle_win"));const afterFirst=state.lord.gold;earned=applyMissionProgress(state);assert.equal(earned.length,0,"이미 받은 업적 보상은 중복 지급되지 않음");assert.equal(state.lord.gold,afterFirst);
+state.campaign.clearedStages=[1,2,3,4,5];state.recruit.totalPulls.normal=50;state.generals=generals.slice(0,20);for(const g of state.generals)g.owned=true;earned=applyMissionProgress(state);assert.ok(earned.some(x=>x.id==="campaign_clear_5"));assert.ok(earned.some(x=>x.id==="recruit_50"));assert.ok(earned.some(x=>x.id==="generals_20"));
+const metrics=missionMetrics(state);assert.equal(metrics.campaignClears,5);assert.equal(metrics.recruitPulls,50);assert.equal(metrics.ownedGenerals,20);
+const normalized=normalizeMissionState({completedIds:["first_battle_win","unknown","first_battle_win"]});assert.deepEqual(normalized.completedIds,["first_battle_win"]);
+assert.equal(MISSION_DEFS.length,13);console.log("임무 13종·누적 진행도·자동 보상·중복 지급 방지·저장 형식 5→7 마이그레이션 검사 통과");

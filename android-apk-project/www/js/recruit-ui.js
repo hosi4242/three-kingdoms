@@ -1,4 +1,5 @@
 // 모집 화면 (v0.4.0). 규칙 계산은 recruit.js, 저장은 app.js의 commit 함수가 담당하고 이 파일은 화면과 버튼만 다룹니다.
+import { portraitHTML } from "./portrait.js";
 import { BANNERS, BANNER_IDS, RANKS, PITY_LIMIT, LEGEND_REDEEM_COST, SHARD_PER_DUPLICATE, recruit, redeemLegend, recruitCost, pullsUntilGuarantee } from "./recruit.js";
 
 export function createRecruitUI({ $, esc, getState, commit, notify }) {
@@ -22,7 +23,7 @@ export function createRecruitUI({ $, esc, getState, commit, notify }) {
   function resultCard(r, st) {
     const g = st.generals.find(x => x.id === r.generalId); if (!g) return "";
     const tag = r.isNew ? '<span class="tag tag-new">NEW</span>' : `<span class="tag tag-dup">중복 · ${esc(r.rank)} 혼 조각 +${r.shards}</span>`;
-    return `<div class="result-card rank-${esc(r.rank)}"><div class="portrait">${esc(g.name.slice(0, 1))}</div><div><strong>${esc(g.name)}</strong><span class="rank">${esc(r.rank)}</span>${r.guaranteed ? '<span class="tag tag-pity">보장</span>' : ""}<div class="meta">${esc(g.faction)} · ${esc(g.style)}</div>${tag}</div></div>`;
+    return `<div class="result-card rank-${esc(r.rank)}">${portraitHTML(g)}<div><strong>${esc(g.name)}</strong><span class="rank">${esc(r.rank)}</span>${r.guaranteed ? '<span class="tag tag-pity">보장</span>' : ""}<div class="meta">${esc(g.faction)} · ${esc(g.style)}</div>${tag}</div></div>`;
   }
 
   function render() {

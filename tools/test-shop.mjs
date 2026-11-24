@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import {SHOP_ITEMS,defaultShopState,normalizeShopState,purchaseShopItem} from "../browser-test/js/shop.js";
+import {migrateState} from "../browser-test/js/db.js";
+const base=()=>({lord:{gold:2000},inventory:{expManual:2,awakeningStone:0,equipmentMaterials:10,equipmentLeather:1,equipmentJade:0},shop:defaultShopState()});
+let s=base(),r=purchaseShopItem(s,"expManual",2);assert.equal(r.ok,true);assert.equal(r.state.lord.gold,1640);assert.equal(r.state.inventory.expManual,4);assert.equal(r.state.shop.purchaseCount,2);assert.equal(r.state.shop.totalGoldSpent,360);assert.equal(s.lord.gold,2000);console.log("OK 경험서 구매·금화 차감·통계·원본 불변");
+s=base();r=purchaseShopItem(s,"equipmentMaterials",3);assert.equal(r.ok,true);assert.equal(r.state.inventory.equipmentMaterials,25);assert.equal(r.state.lord.gold,1640);console.log("OK 묶음 상품 수량 및 지급량 계산");
+s=base();s.lord.gold=100;r=purchaseShopItem(s,"awakeningStone",1);assert.equal(r.ok,false);assert.equal(s.inventory.awakeningStone,0);assert.equal(s.lord.gold,100);console.log("OK 금화 부족 시 구매 거부·원본 보존");
+for(const [id,q] of [["unknown",1],["expManual",0],["expManual",-1],["expManual",1.5],["expManual",100]])assert.equal(purchaseShopItem(base(),id,q).ok,false);console.log("OK 잘못된 상품·수량 거부");
+s=base();for(const item of SHOP_ITEMS){const cost=item.price;if(s.lord.gold>=cost){r=purchaseShopItem(s,item.id,1);assert.equal(r.ok,true);s=r.state;assert.ok(s.inventory[item.inventoryKey]>=item.amount)}}console.log("OK 5종 상점 상품 개별 지급 확인");
+assert.deepEqual(normalizeShopState({purchaseCount:-5,totalGoldSpent:"bad"}),{purchaseCount:0,totalGoldSpent:0});console.log("OK 손상된 상점 통계 정규화");
+const old={saveFormatVersion:6,lord:{gold:555},generals:[{id:"legacy",owned:true,stats:{martial:10},level:4}],inventory:{expManual:2,equipmentMaterials:8,equipmentLeather:2,equipmentJade:1,equipment:[]},records:{battleWins:3},missions:{completedIds:["first_battle_win"]}};
+const migrated=migrateState(old);assert.equal(migrated.saveFormatVersion,7);assert.deepEqual(migrated.shop,defaultShopState());assert.equal(migrated.lord.gold,555);assert.equal(migrated.inventory.equipmentMaterials,8);assert.deepEqual(migrated.missions.completedIds,["first_battle_win"]);
+console.log("OK 저장 형식 6→7 마이그레이션 및 기존 진행 데이터 보존");
+console.log("shop tests passed");
