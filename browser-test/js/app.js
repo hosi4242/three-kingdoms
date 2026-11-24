@@ -163,7 +163,7 @@ function renderArenaBattle(){
  $("#arena-result").classList.remove("hidden");
  $("#arena-enemy-alive").textContent=enemy.filter(x=>x.hp>0).length;$("#arena-player-alive").textContent=player.filter(x=>x.hp>0).length;
  $("#arena-enemy-team").innerHTML=renderArenaTeam(gameState.generals,enemy,{activeId:actorId,selectable:phase==="target"||phase==="skill-target"});
- $("#arena-player-team").innerHTML=renderArenaTeam(gameState.generals,player,{activeId:actorId,healable:phase==="heal-target"});
+ $("#arena-player-team").innerHTML=renderArenaTeam(gameState.generals,player,{activeId:actorId,healable:phase==="heal-target",excludeId:actorId});
  renderArenaActions();
 }
 function completeArenaAction(actor){
@@ -223,7 +223,7 @@ function chooseArenaTarget(id,useSkill=false){
 function chooseArenaHealTarget(id){
  if(!arenaBattle||arenaBattle.phase!=="heal-target")return;
  const actor=arenaBattle.player.find(x=>x.id===arenaBattle.actorId),target=arenaBattle.player.find(x=>x.id===id);
- if(!actor||!target||target.hp<=0||actor.skill.kind!=="ally")return;
+ if(!actor||!target||target.hp<=0||target.id===actor.id||actor.skill.kind!=="ally")return;
  const result=applyArenaHeal(actor,target,arenaBattle.log);if(!result.ok)return notify(result.reason||"회복할 수 없습니다.");
  arenaMessage(actor.name+"이(가) "+target.name+"의 체력을 회복했습니다.");completeArenaAction(actor);
 }
