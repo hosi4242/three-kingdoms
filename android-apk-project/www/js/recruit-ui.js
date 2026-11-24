@@ -23,7 +23,7 @@ export function createRecruitUI({ $, esc, getState, commit, notify }) {
   function resultCard(r, st) {
     const g = st.generals.find(x => x.id === r.generalId); if (!g) return "";
     const tag = r.isNew ? '<span class="tag tag-new">NEW</span>' : `<span class="tag tag-dup">중복 · ${esc(r.rank)} 혼 조각 +${r.shards}</span>`;
-    return `<div class="result-card rank-${esc(r.rank)}">${portraitHTML(g)}<div><strong>${esc(g.name)}</strong><span class="rank">${esc(r.rank)}</span>${r.guaranteed ? '<span class="tag tag-pity">보장</span>' : ""}<div class="meta">${esc(g.faction)} · ${esc(g.style)}</div>${tag}</div></div>`;
+    return `<div class="result-card rank-${esc(r.rank)}">${portraitHTML(g)}<div><strong>${esc(g.name)}</strong><span class="rank">${esc(r.rank)}</span>${r.guaranteed ? '<span class="tag tag-pity">보장</span>' : ""}<div class="meta">${esc(g.faction)} · ${esc(g.style)}</div>${tag}</div><button type="button" class="general-back-toggle" data-general-back>뒷면 보기</button><div class="general-card-back"><b>능력치</b><p>무력 ${g.stats.martial} · 지력 ${g.stats.intelligence} · 통솔 ${g.stats.leadership} · 정치 ${g.stats.politics} · 매력 ${g.stats.charm}</p><b>필살기</b><p>${esc(g.skillDesc||g.ultimate||"정보 없음")}</p></div></div>`;
   }
 
   function render() {

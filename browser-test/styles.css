@@ -179,3 +179,19 @@ textarea{width:100%;box-sizing:border-box;margin-top:10px;background:#0e1929;col
 .arena-unit.defDown .arena-status-art{display:flex;color:#ffad83}
 .arena-unit .arena-card-actions button{position:relative;z-index:4}
 @media(max-width:390px){.arena-card-action{font-size:.61rem;padding:6px 2px}.arena-card-action small{font-size:.54rem}}
+
+/* v2.3.0 */
+.general-card{position:relative;display:block;min-width:0}.general-card-main{display:flex;width:100%;text-align:left;align-items:center;gap:9px;background:transparent;border:0;color:inherit;padding:0;cursor:pointer}
+.general-back-toggle{position:absolute;right:5px;bottom:5px;z-index:5;border:1px solid #d7b76a88;border-radius:5px;background:#080f1dcc;color:#f5d994;font-size:8px;font-weight:800;padding:4px 6px;cursor:pointer}
+.general-card-back{display:none;position:absolute;z-index:4;inset:0;overflow:auto;padding:10px 9px 30px;border-radius:inherit;background:linear-gradient(145deg,#3b2c37,#171727);border:1px solid #d7b76a;color:#eee3d4}
+.is-flipped>.general-card-back{display:block}
+.general-card.is-flipped .general-card-main,.training-card.is-flipped .training-head,.training-card.is-flipped .training-progress,.training-card.is-flipped>p,.training-card.is-flipped .training-actions,.roster-choice.is-flipped>span,.roster-choice.is-flipped>img,.arena-pick.is-flipped>span{visibility:hidden}
+.general-back-line{display:grid;gap:2px;padding:4px 0;border-bottom:1px solid #d7b76a40}.general-back-line b{font-size:9px;color:#f1d28b}.general-back-line span{font-size:8px;line-height:1.35;color:#eee3d4}
+.training-card,.roster-choice,.arena-pick{position:relative}.training-card .general-card-back,.roster-choice .general-card-back,.arena-pick .general-card-back{inset:0}
+.arena-card-front{position:relative;z-index:1}.arena-card-back{position:absolute;inset:0;z-index:3;overflow:auto;padding:10px 8px 30px;border-radius:11px}.arena-unit.is-flipped .arena-card-front{display:none}.arena-unit.is-flipped .arena-card-back{display:block}
+.arena-flip{position:absolute;right:5px;bottom:5px;z-index:5;border:1px solid #d7b76a;border-radius:5px;background:#080f1ddd;color:#f5d994;font-size:8px;padding:4px 6px}
+.arena-end-actions{display:flex;gap:8px;margin-top:10px}.arena-end-actions button{flex:1}.danger-btn{border:1px solid #d36d67;background:#672b32;color:#fff;border-radius:9px;padding:10px;font-weight:900}
+
+.choice-card{position:relative;min-width:0}.choice-card.is-flipped .choice-btn{visibility:hidden}
+.result-card{position:relative}.result-card.is-flipped>img,.result-card.is-flipped>div:not(.general-card-back){visibility:hidden}
+.roster-choice.is-flipped>input,.arena-pick.is-flipped>input{visibility:hidden}
