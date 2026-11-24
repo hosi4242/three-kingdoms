@@ -112,3 +112,34 @@ textarea{width:100%;box-sizing:border-box;margin-top:10px;background:#0e1929;col
 .faction-wei .arena-card-back{background:linear-gradient(145deg,#3d4255,#20283b)}.faction-shu .arena-card-back{background:linear-gradient(145deg,#54383d,#2b202e)}.faction-wu .arena-card-back{background:linear-gradient(145deg,#294a48,#192d34)}.faction-other .arena-card-back{background:linear-gradient(145deg,#514332,#29242c)}
 @media(max-width:390px){.arena-battle-grid{gap:5px}.arena-battle-grid h3{font-size:11px}.arena-team{gap:4px}.arena-card-face{padding-left:4px;padding-right:4px;min-height:166px}.arena-unit{min-height:166px}.arena-card-face h4{font-size:17px}.arena-stats span{font-size:8px}.arena-back-section p{font-size:6.5px}}
 @media(prefers-reduced-motion:reduce){.arena-card-face{transition:none}}
+
+
+/* v2.0.3: Summoners-War-inspired manual target arena */
+.arena-battlefield{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.arena-side{border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(10,18,32,.72)}
+.arena-side-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.arena-side-heading h3{margin:0;font-size:1rem}.arena-side-heading span{font-size:.68rem;letter-spacing:.14em;color:var(--muted)}
+.arena-side.enemy-side{border-color:rgba(183,94,88,.55);background:linear-gradient(180deg,rgba(125,43,48,.18),rgba(10,18,32,.8))}
+.arena-side.player-side{border-color:rgba(76,132,185,.55);background:linear-gradient(180deg,rgba(42,89,142,.18),rgba(10,18,32,.8))}
+.arena-team{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.arena-midline{display:flex;align-items:center;justify-content:center;color:var(--gold);font-weight:900;letter-spacing:.3em;font-size:.78rem}
+.arena-unit{min-width:0;position:relative;border:1px solid var(--line);border-radius:12px;padding:9px 8px;background:linear-gradient(155deg,#202c40,#101a2b);transition:transform .18s,border-color .18s,opacity .18s;overflow:hidden}
+.arena-unit.faction-wei{border-color:#b99a60;background:linear-gradient(155deg,#3b3326,#171d29)}
+.arena-unit.faction-shu{border-color:#6eaa79;background:linear-gradient(155deg,#203d31,#121d29)}
+.arena-unit.faction-wu{border-color:#b56b62;background:linear-gradient(155deg,#432b2d,#171d29)}
+.arena-unit.faction-other{border-color:#8b83b8}
+.arena-unit h4{font-size:1rem;margin:8px 0 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arena-card-top{display:flex;justify-content:space-between;color:var(--gold);font-size:.68rem}
+.arena-card-role,.arena-hp-label,.arena-card-status{font-size:.68rem;color:var(--muted);margin:5px 0}
+.arena-hp{height:7px;border-radius:8px;background:#080d16;overflow:hidden;margin-top:9px}.arena-hp i{display:block;height:100%;background:linear-gradient(90deg,#a94448,#e0a45b);transition:width .35s}
+.arena-stats{display:flex;justify-content:space-between;gap:3px;font-size:.7rem;margin:7px 0;color:#e8edf5}
+.arena-card-skill{border-top:1px solid rgba(255,255,255,.1);padding-top:6px;font-size:.72rem}.arena-card-skill small{display:block;color:var(--muted);font-size:.65rem;margin-top:3px;line-height:1.3}
+.arena-unit.acting{outline:2px solid var(--gold);transform:translateY(-2px);box-shadow:0 0 16px rgba(217,182,107,.22)}
+.arena-unit.fallen{opacity:.38;filter:grayscale(1)}
+.arena-target-btn{width:100%;margin-top:8px;border:1px solid #d17b70;border-radius:8px;padding:8px 4px;background:#642f35;color:#fff;font-weight:800;font-size:.75rem;cursor:pointer}
+.arena-target-btn:active{transform:scale(.97)}
+.arena-action-panel{margin:12px 0;border-color:rgba(217,182,107,.5)}
+.arena-action-panel p{font-weight:800;color:var(--gold);margin:7px 0}
+.arena-action-panel small{color:var(--muted)}
+.arena-log{max-height:190px;overflow:auto;padding-left:22px;font-size:.78rem;line-height:1.65}
+@media(min-width:700px){.arena-battlefield{max-width:850px;margin:16px auto}.arena-team{grid-template-columns:repeat(4,minmax(0,1fr))}.arena-unit{padding:12px}.arena-unit h4{font-size:1.08rem}}
