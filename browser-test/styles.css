@@ -167,3 +167,15 @@ textarea{width:100%;box-sizing:border-box;margin-top:10px;background:#0e1929;col
 .arena-card-status{font-weight:900;text-shadow:0 1px 3px #000}
 .arena-target-btn{position:relative;z-index:2}
 @media(max-width:520px){.arena-action-options{position:sticky;bottom:8px;z-index:5;padding:7px;background:#101b2c;border:1px solid var(--line);border-radius:10px}.arena-action-options button{font-size:.78rem}}
+
+/* v2.2.0: 장수 카드 하단 전용 행동 버튼 */
+.arena-card-actions{display:flex;gap:5px;margin-top:8px;position:relative;z-index:3}
+.arena-card-action{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 3px;border-radius:7px;font-size:.68rem;font-weight:900;line-height:1.15;cursor:pointer}
+.arena-card-action.normal{border:1px solid #82a9d4;background:#203e60;color:#eef6ff}
+.arena-card-action.ultimate{border:1px solid #d9b66b;background:linear-gradient(145deg,#725126,#3e2b19);color:#fff0c7}
+.arena-card-action:disabled{opacity:.42;filter:grayscale(.7);cursor:not-allowed}
+.arena-card-action small{font-size:.58rem;font-weight:700;color:#f5dca1}
+.arena-unit.defDown{border:2px solid #ff9b6b;background:radial-gradient(circle at 50% 42%,#713b2c 0%,#39242a 48%,#171d29 86%)}
+.arena-unit.defDown .arena-status-art{display:flex;color:#ffad83}
+.arena-unit .arena-card-actions button{position:relative;z-index:4}
+@media(max-width:390px){.arena-card-action{font-size:.61rem;padding:6px 2px}.arena-card-action small{font-size:.54rem}}
