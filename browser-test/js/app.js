@@ -179,7 +179,7 @@ function nextArenaActor(){
  window.setTimeout(()=>{
   if(!arenaBattle||arenaBattle.actorId!==actor.id)return;
   const skill=actor.skillCooldown<=0&&Math.random()<.48;
-  if(skill&&actor.skill.kind==="allAttack"){applyArenaAreaSkill(actor,friends,arenaBattle.log)}else if(skill&&actor.skill.kind==="ally"){
+  if(skill&&actor.skill.kind==="allAttack"){applyArenaAreaSkill(actor,foes,arenaBattle.log)}else if(skill&&actor.skill.kind==="ally"){
    const ally=friends.filter(x=>x.hp<x.stats.maxHp).sort((a,b)=>a.hp/a.stats.maxHp-b.hp/b.stats.maxHp)[0];
    if(ally)applyArenaHeal(actor,ally,arenaBattle.log);else applyArenaAttack(actor,target,arenaBattle.log,false);
   }else applyArenaAttack(actor,target,arenaBattle.log,skill);
