@@ -191,3 +191,7 @@ textarea{width:100%;box-sizing:border-box;margin-top:10px;background:#0e1929;col
 .arena-card-front{position:relative;z-index:1}.arena-card-back{position:absolute;inset:0;z-index:3;overflow:auto;padding:10px 8px 30px;border-radius:11px}.arena-unit.is-flipped .arena-card-front{display:none}.arena-unit.is-flipped .arena-card-back{display:block}
 .arena-flip{position:absolute;right:5px;bottom:5px;z-index:5;border:1px solid #d7b76a;border-radius:5px;background:#080f1ddd;color:#f5d994;font-size:8px;padding:4px 6px}
 .arena-end-actions{display:flex;gap:8px;margin-top:10px}.arena-end-actions button{flex:1}.danger-btn{border:1px solid #d36d67;background:#672b32;color:#fff;border-radius:9px;padding:10px;font-weight:900}
+
+.choice-card{position:relative;min-width:0}.choice-card.is-flipped .choice-btn{visibility:hidden}
+.result-card{position:relative}.result-card.is-flipped>img,.result-card.is-flipped>div:not(.general-card-back){visibility:hidden}
+.roster-choice.is-flipped>input,.arena-pick.is-flipped>input{visibility:hidden}
