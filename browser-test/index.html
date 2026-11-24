@@ -15,7 +15,7 @@
       <div class="eyebrow">OFFLINE STRATEGY CARD GAME</div>
       <h1>삼국지: 천하패권</h1>
     </div>
-    <div class="version">개발판 v<span data-app-version>2.0.2</span></div>
+    <div class="version">개발판 v<span data-app-version>2.2.0</span></div>
   </header>
 
   <main>
@@ -74,7 +74,7 @@
  <div id="arena-setup" class="panel settings-card"><div class="arena-section-head"><h3>출전 장수 4명 선택</h3><span id="arena-selected-count" class="muted small">0 / 4</span></div><div id="arena-roster" class="arena-roster"></div><button id="arena-start" class="primary-btn" disabled>4대4 아레나 시작</button></div>
  <div id="arena-result" class="hidden">
   <div class="arena-score"><div><small>내 진영 생존</small><strong id="arena-player-alive">4</strong></div><span>VS</span><div><small>적 진영 생존</small><strong id="arena-enemy-alive">4</strong></div></div>
-  <div class="panel arena-action-panel" id="arena-action-controls"><strong>전투 진행</strong><p id="arena-turn-message" aria-live="polite">전투 대기 중</p><small>내 차례에 일반 공격 또는 필살기를 선택하고, 회복 필살기는 아군 카드를 직접 지정합니다.</small><div id="arena-action-options" class="arena-action-options"></div></div>
+  <div class="panel arena-action-panel" id="arena-action-controls"><strong>전투 진행</strong><p id="arena-turn-message" aria-live="polite">전투 대기 중</p><small>내 차례에 각 장수 카드 하단에서 일반 공격·필살기를 선택합니다. 필살기 효과와 발동 확률은 카드에 표시됩니다.</small><div id="arena-action-options" class="arena-action-options"></div></div>
   <div class="arena-battlefield">
    <section class="arena-side enemy-side"><div class="arena-side-heading"><h3>상대 진영</h3><span>ENEMY</span></div><div id="arena-enemy-team" class="arena-team"></div></section>
    <div class="arena-midline"><span>VS</span></div>
@@ -161,7 +161,7 @@
       </div>
       <div class="panel settings-card">
         <h3>버전 및 업데이트 구조</h3>
-        <p>앱 버전: <strong data-app-version>2.0.2</strong></p>
+        <p>앱 버전: <strong data-app-version>2.2.0</strong></p>
         <p>저장 데이터 형식: <strong id="save-version">5</strong></p>
         <p class="muted">앱 파일과 저장 데이터 버전을 분리했습니다. v1.0.0에서는 저장 형식 6에서 7로 자동 변환해 기존 진행 상황과 재화를 유지합니다. 상점은 게임 내 금화만 사용하며 현금 결제는 없습니다.</p>
         <p class="muted small">현재 개발판은 로컬 기기 저장을 사용합니다. 브라우저 데이터 삭제 또는 앱 제거 전에 백업 파일을 보관하세요.</p>
