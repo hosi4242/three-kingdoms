@@ -194,11 +194,13 @@ function nextArenaActor(){
  window.setTimeout(()=>{
   if(!arenaBattle||arenaBattle.actorId!==actor.id)return;
   const skill=actor.skillCooldown<=0&&Math.random()<.48;
-  if(skill&&actor.skill.kind==="allAttack"){applyArenaAreaSkill(actor,foes,arenaBattle.log)}else if(skill&&actor.skill.kind==="ally"){
+  let hitIds=[];
+  if(skill&&actor.skill.kind==="allAttack"){applyArenaAreaSkill(actor,foes,arenaBattle.log);hitIds=foes.map(x=>x.id)}
+  else if(skill&&actor.skill.kind==="ally"){
    const ally=friends.filter(x=>x.hp<x.stats.maxHp).sort((a,b)=>a.hp/a.stats.maxHp-b.hp/b.stats.maxHp)[0];
-   if(ally)applyArenaHeal(actor,ally,arenaBattle.log);else applyArenaAttack(actor,target,arenaBattle.log,false);
-  }else applyArenaAttack(actor,target,arenaBattle.log,skill);
-  arenaBattle.actedIds.push(actor.id);arenaBattle.phase="resolving";renderArenaBattle();window.setTimeout(nextArenaActor,700);
+   if(ally)applyArenaHeal(actor,ally,arenaBattle.log);else {applyArenaAttack(actor,target,arenaBattle.log,false);hitIds=[target.id]}
+  }else {applyArenaAttack(actor,target,arenaBattle.log,skill);hitIds=[target.id]}
+  arenaBattle.actedIds.push(actor.id);arenaBattle.phase="resolving";renderArenaBattle();if(hitIds.length)playArenaImpact(actor.id,hitIds);window.setTimeout(nextArenaActor,700);
  },550);
 }
 function startArena(){
