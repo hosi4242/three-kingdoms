@@ -62,6 +62,9 @@ export function applyArenaAttack(actor,target,log,useSkill=false){
 export function applyArenaHeal(actor,target,log){
  if(!actor||!target||actor.hp<=0||target.hp<=0||actor.team!==target.team)return {ok:false};
  if(actor.skillCooldown>0)return {ok:false,reason:"필살기는 아직 재사용 대기 중입니다."};
+ for(const e of actor.effects)if(e.type==="dot"&&e.turns>0){actor.hp=Math.max(0,actor.hp-e.power);log.push("☠ "+actor.name+" 지속 피해 "+e.power)}
+ if(actor.hp<=0)return {ok:false,reason:"지속 피해로 행동할 수 없습니다."};
+ if(active(actor,"stun")){log.push("⚡ "+actor.name+" 기절 · 회복 행동 불가");age(actor);return {ok:false,reason:"기절 상태에서는 회복할 수 없습니다."}}
  const amount=Math.min(target.stats.maxHp-target.hp,Math.round(actor.stats.maxHp*.42+actor.stats.atk*.42));
  target.hp=Math.min(target.stats.maxHp,target.hp+amount);actor.skillCooldown=actor.skill.cooldown;age(actor);
  log.push("✚ "+actor.name+"의 "+actor.skill.name+" · "+target.name+" 체력 "+amount+" 회복");
