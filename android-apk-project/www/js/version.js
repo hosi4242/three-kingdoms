@@ -1,5 +1,5 @@
 // 앱/저장 형식 버전은 이 파일 한 곳에서 관리합니다.
-export const APP_VERSION = "2.3.3";
+export const APP_VERSION = "2.3.4";
 export const SAVE_FORMAT_VERSION = 7;
 export const BACKUP_VERSION = 7;
 // v1.0.0: 상점 구매 이력 필드 추가.
@@ -14,3 +14,5 @@ export const BACKUP_VERSION = 7;
 // v2.3.1: 카드 필살기 설명에 상태 효과 적용 확률을 명시.
 
 // v2.3.2: 모바일 아레나 카드 압축·기권 확인·가변 AI 타깃·타격 애니메이션.
+
+// v2.3.4: 양 진영 상태·지속 턴, 필살기 대상/효과/확률, 등급별 이름 강조, 전투 안내 문구 제거.
