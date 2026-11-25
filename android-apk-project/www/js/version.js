@@ -1,5 +1,5 @@
 // 앱/저장 형식 버전은 이 파일 한 곳에서 관리합니다.
-export const APP_VERSION = "2.3.2";
+export const APP_VERSION = "2.3.3";
 export const SAVE_FORMAT_VERSION = 7;
 export const BACKUP_VERSION = 7;
 // v1.0.0: 상점 구매 이력 필드 추가.
