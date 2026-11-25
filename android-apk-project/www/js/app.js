@@ -150,7 +150,7 @@ function renderArena(){
  host.innerHTML=owned.map(g=>{const st=arenaStats(g,gameState.inventory.equipment||[]),on=arenaSelection.includes(g.id);return `<label class="arena-pick ${on?"selected":""}"><input type="checkbox" data-arena-pick="${esc(g.id)}" ${on?"checked":""} ${arenaSelection.length>=4&&!on?"disabled":""}><span><b>${esc(g.name)}</b><small>${esc(g.faction)} · ${esc(g.rank)} · Lv.${g.level||1}</small><small>HP ${st.hp} · ATK ${st.atk} · DEF ${st.def} · SPD ${st.spd}</small><small class="arena-pick-trait">필살기 · ${esc(st.skill.name)} (${st.skill.kind==="ally"?"회복형":st.skill.kind==="self"?"자기 강화":st.skill.kind==="allAttack"?"전체 공격":"공격형"})</small></span>${generalBackHTML(g)}</label>`}).join("")||'<p class="muted">보유 장수가 없습니다.</p>';
  $("#arena-selected-count").textContent=`${arenaSelection.length} / 4`;$("#arena-start").disabled=arenaSelection.length!==4;
 }
-function arenaMessage(message){$("#arena-turn-message").textContent=message}
+function arenaMessage(message){const el=$("#arena-turn-message");if(el)el.textContent=""}
 function renderArenaActions(){const host=$("#arena-action-options");if(host)host.innerHTML="";}
 function renderArenaBattle(){
  if(!arenaBattle)return;
@@ -211,7 +211,7 @@ function startArena(){
  if(enemy.length<4)return notify("대전 상대 장수가 부족합니다.");
  arenaBattle={player:createArenaTeam(gameState.generals,arenaSelection,gameState.inventory.equipment||[]),enemy:createArenaTeam(gameState.generals,enemy,gameState.inventory.equipment||[],true),actorId:null,phase:"",actedIds:[],log:[],finished:false};
  $("#arena-start").disabled=true;$("#arena-setup").classList.add("hidden");$("#arena-result").classList.remove("hidden");
- $("#arena-action-controls").classList.remove("hidden");$("#arena-turn-message").textContent="전투 순서를 계산하고 있습니다.";
+ $("#arena-action-controls").classList.remove("hidden");$("#arena-turn-message").textContent="";
  $("#arena-player-team").innerHTML="";$("#arena-enemy-team").innerHTML="";renderArenaBattle();window.setTimeout(nextArenaActor,450);
 }
 function chooseArenaAction(action){
